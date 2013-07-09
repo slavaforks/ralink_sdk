@@ -329,7 +329,16 @@ vendor_%:
 	$(MAKEARCH) -C vendors $@
 
 .PHONY: linux
-linux linux%_only:
+linux%_only:
+	@if [ $(LINUXDIR) = linux-2.4.x -a ! -f $(LINUXDIR)/.depend ] ; then \
+		echo "ERROR: you need to do a 'make dep' first" ; \
+		exit 1 ; \
+	fi
+	$(MAKEARCH_KERNEL) -j$(HOST_NCPU) -C $(LINUXDIR) $(LINUXTARGET) || exit 1
+	if [ -f $(LINUXDIR)/vmlinux ]; then \
+		ln -f $(LINUXDIR)/vmlinux $(LINUXDIR)/linux ; \
+	fi
+linux:
 	@if [ $(LINUXDIR) = linux-2.4.x -a ! -f $(LINUXDIR)/.depend ] ; then \
 		echo "ERROR: you need to do a 'make dep' first" ; \
 		exit 1 ; \

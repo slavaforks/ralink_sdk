@@ -2,8 +2,8 @@
 mount -a
 mkdir -p /var/run
 cat /etc_ro/motd
-nvram_daemon&
-goahead&
+#nvram_daemon&
+#goahead&
 
 #for telnet debugging
 telnetd
