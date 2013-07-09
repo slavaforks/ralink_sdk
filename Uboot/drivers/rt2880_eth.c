@@ -98,7 +98,7 @@
 /*
  * Ethernet chip registers.RT2880
  */
-#if defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
+#if defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD) 
 
 #define PDMA_RELATED		0x0800
 /* 1. PDMA */
@@ -156,94 +156,6 @@
 #define SDM_RPCNT               (RALINK_FRAME_ENGINE_BASE + SDM_RELATED+0x108) //Switch DMA rx packet count
 #define SDM_RBCNT               (RALINK_FRAME_ENGINE_BASE + SDM_RELATED+0x10C) //Switch DMA rx byte count
 #define SDM_CS_ERR              (RALINK_FRAME_ENGINE_BASE + SDM_RELATED+0x110) //Switch DMA rx checksum error count
-
-#elif defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
-      defined (RT6855A_FPGA_BOARD) || defined (RT6855A_ASIC_BOARD) || \
-      defined (RT6352_ASIC_BOARD) || defined (RT6352_FPGA_BOARD) || \
-      defined (RT71100_ASIC_BOARD) || defined (RT71100_FPGA_BOARD)
-/* Old FE with New PDMA */
-#define PDMA_RELATED		0x0800
-/* 1. PDMA */
-#define TX_BASE_PTR0            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x000)
-#define TX_MAX_CNT0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x004)
-#define TX_CTX_IDX0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x008)
-#define TX_DTX_IDX0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x00C)
-
-#define TX_BASE_PTR1            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x010)
-#define TX_MAX_CNT1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x014)
-#define TX_CTX_IDX1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x018)
-#define TX_DTX_IDX1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x01C)
-
-#define TX_BASE_PTR2            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x020)
-#define TX_MAX_CNT2             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x024)
-#define TX_CTX_IDX2             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x028)
-#define TX_DTX_IDX2             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x02C)
-
-#define TX_BASE_PTR3            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x030)
-#define TX_MAX_CNT3             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x034)
-#define TX_CTX_IDX3             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x038)
-#define TX_DTX_IDX3             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x03C)
-
-#define RX_BASE_PTR0            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x100)
-#define RX_MAX_CNT0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x104)
-#define RX_CALC_IDX0            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x108)
-#define RX_DRX_IDX0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x10C)
-
-#define RX_BASE_PTR1            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x110)
-#define RX_MAX_CNT1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x114)
-#define RX_CALC_IDX1            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x118)
-#define RX_DRX_IDX1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x11C)
-
-#define PDMA_INFO               (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x200)
-#define PDMA_GLO_CFG            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x204)
-#define PDMA_RST_IDX            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x208)
-#define PDMA_RST_CFG            (RALINK_FRAME_ENGINE_BASE + PDMA_RST_IDX)
-#define DLY_INT_CFG             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x20C)
-#define FREEQ_THRES             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x210)
-#define INT_STATUS              (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x220) /* FIXME */
-#define INT_MASK                (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x228) /* FIXME */
-#define PDMA_WRR                (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x280)
-#define PDMA_SCH_CFG            (PDMA_WRR)
-
-/* TODO: change FE_INT_STATUS->INT_STATUS 
- * FE_INT_ENABLE->INT_MASK */
-#define MDIO_ACCESS         RALINK_FRAME_ENGINE_BASE + 0x00
-#define MDIO_CFG            RALINK_FRAME_ENGINE_BASE + 0x04
-#define FE_DMA_GLO_CFG      RALINK_FRAME_ENGINE_BASE + 0x08
-#define FE_RST_GLO          RALINK_FRAME_ENGINE_BASE + 0x0C
-#define FE_INT_STATUS       RALINK_FRAME_ENGINE_BASE + 0x10
-#define FE_INT_ENABLE       RALINK_FRAME_ENGINE_BASE + 0x14
-#define FC_DROP_STA         RALINK_FRAME_ENGINE_BASE + 0x18
-#define FOE_TS_T            RALINK_FRAME_ENGINE_BASE + 0x1C
-
-#if defined (PDMA_NEW)
-#define GDMA1_RELATED       0x0600
-#define GDMA1_FWD_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x00)
-#define GDMA1_SHRP_CFG      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x04)
-#define GDMA1_MAC_ADRL      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x08)
-#define GDMA1_MAC_ADRH      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x0C)
-#else
-#define GDMA1_RELATED       0x0020
-#define GDMA1_FWD_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x00)
-#define GDMA1_SCH_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x04)
-#define GDMA1_SHRP_CFG      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x08)
-#define GDMA1_MAC_ADRL      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x0C)
-#define GDMA1_MAC_ADRH      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x10)
-#endif
-
-#define PSE_RELATED         0x0040
-#define PSE_FQFC_CFG        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x00)
-#define CDMA_FC_CFG         (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x04)
-#define GDMA1_FC_CFG        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x08)
-#define GDMA2_FC_CFG        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x0C)
-#define CDMA_OQ_STA         (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x10)
-#define GDMA1_OQ_STA        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x14)
-#define GDMA2_OQ_STA        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x18)
-#define PSE_IQ_STA          (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x1C)
-
-#define CDMA_RELATED        0x0080
-#define CDMA_CSG_CFG        (RALINK_FRAME_ENGINE_BASE + CDMA_RELATED + 0x00)
-#define CDMA_SCH_CFG        (RALINK_FRAME_ENGINE_BASE + CDMA_RELATED + 0x04)
 
 #else
 
@@ -316,7 +228,6 @@
 #define ESRAM_ON  1
 #define ESRAM_OFF 0
 
-//#define CONFIG_UNH_TEST
 
 /*****************************************/
 //PCI define
@@ -462,18 +373,6 @@ typedef struct _PDMA_RXD_INFO4_    PDMA_RXD_INFO4_T;
 
 struct _PDMA_RXD_INFO4_
 {
-#if defined (PDMA_NEW)
-	unsigned int    FOE_Entry           	: 14;
-	unsigned int    CRSN                	: 5;
-	unsigned int    SP               	: 3;
-	unsigned int    L4F                 	: 1;
-	unsigned int    L4VLD               	: 1;
-	unsigned int    TACK                	: 1;
-	unsigned int    IP4F                	: 1;
-	unsigned int    IP4                 	: 1;
-	unsigned int    IP6                 	: 1;
-	unsigned int    UN_USE1             	: 4;
-#else
 	unsigned int    FOE_Entry               : 14;
 	unsigned int    FVLD                    : 1;
 	unsigned int    UN_USE1                 : 1;
@@ -484,7 +383,6 @@ struct _PDMA_RXD_INFO4_
 	unsigned int    IPF                     : 1;
 	unsigned int    L4FVLD_bit              : 1;
 	unsigned int    IPFVLD_bit              : 1;
-#endif
 };
 
 struct PDMA_rxdesc {
@@ -533,15 +431,6 @@ struct _PDMA_TXD_INFO4_
 	unsigned int    INSV                : 1;
 	unsigned int    SIDX                : 4;
 	unsigned int    INSP                : 1;
-#if defined (PDMA_NEW)
-	unsigned int    RESV                : 2;
-	unsigned int    UDF                 : 5;
-	unsigned int    FP_BMAP             : 8;
-	unsigned int    TSO                 : 1;
-	unsigned int    TCO                 : 1;
-	unsigned int    UCO                 : 1;
-	unsigned int    ICO                 : 1;
-#else
 	unsigned int    UN_USE3             : 3;
 	unsigned int    QN                  : 3;
 	unsigned int    UN_USE2             : 5;
@@ -550,7 +439,6 @@ struct _PDMA_TXD_INFO4_
 	unsigned int    TC0                 : 1;
 	unsigned int    UC0_bit             : 1;
 	unsigned int    IC0_bit             : 1;
-#endif
 };
 
 struct PDMA_txdesc {
@@ -953,7 +841,6 @@ void LANWANPartition(void)
 #if defined (RT3052_ASIC_BOARD) || defined (RT3052_FPGA_BOARD) || \
     defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || \
     defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
-// Only for first generation Switch (RT3052,RT3350,RT3352,RT5350)  
 //	*((volatile u32 *)(RALINK_ETH_SW_BASE + 0x14)) = 0x405555; //enable VLANa
 //	*((volatile u32 *)(RALINK_ETH_SW_BASE + 0x50)) = 0x2001; //VLAN id
 //	*((volatile u32 *)(RALINK_ETH_SW_BASE + 0x98)) = 0x7f7f; //remove VLAN tag
@@ -1085,53 +972,18 @@ static void ResetSWusingGPIOx(void)
 #endif
 
 #if defined (MAC_TO_GIGAPHY_MODE) || defined (P5_MAC_TO_PHY_MODE) 
-#define EV_ICPLUS_PHY_ID0 0x0243
-#define EV_ICPLUS_PHY_ID1 0x0D90
-static int isICPlusGigaPHY(int ge)
-{
-	u32 phy_id0,phy_id1;
-        u32 phy_addr = 0;
-	
-	if(ge == 1)
-	    phy_addr = MAC_TO_GIGAPHY_MODE_ADDR;
-#if defined (P4_MAC_TO_PHY_MODE)	
-	else 
-	    phy_addr = MAC_TO_GIGAPHY_MODE_ADDR2;
-#endif
-	if( ! mii_mgr_read(phy_addr, 2, &phy_id0)){
-		printf("\n Read PhyID 0 is Fail!!\n");
-		phy_id0 =0;
-	}
-
-	if( ! mii_mgr_read(phy_addr, 3, &phy_id1)){
-		printf("\n Read PhyID 1 is Fail!!\n");
-		phy_id1 = 0;
-	}
-
-	if((phy_id0 == EV_ICPLUS_PHY_ID0) && ((phy_id1 & 0xfff0)== EV_ICPLUS_PHY_ID1))
-		return 1;
-
-	return 0;
-}
 #define EV_MARVELL_PHY_ID0 0x0141
 #define EV_MARVELL_PHY_ID1 0x0CC2
-static int isMarvellGigaPHY(int ge)
+static int isMarvellGigaPHY(void)
 {
 	u32 phy_id0,phy_id1;
-        u32 phy_addr = 0;
 
-	if(ge == 1)
-	    phy_addr = MAC_TO_GIGAPHY_MODE_ADDR;
-#if defined (P4_MAC_TO_PHY_MODE)	
-	else 
-	    phy_addr = MAC_TO_GIGAPHY_MODE_ADDR2;
-#endif
-	if( ! mii_mgr_read(phy_addr, 2, &phy_id0)){
+	if( ! mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 2, &phy_id0)){
 		printf("\n Read PhyID 0 is Fail!!\n");
 		phy_id0 =0;
 	}
 
-	if( ! mii_mgr_read(phy_addr, 3, &phy_id1)){
+	if( ! mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 3, &phy_id1)){
 		printf("\n Read PhyID 1 is Fail!!\n");
 		phy_id1 = 0;
 	}
@@ -1144,23 +996,16 @@ static int isMarvellGigaPHY(int ge)
 
 #define EV_VTSS_PHY_ID0 0x0007
 #define EV_VTSS_PHY_ID1 0x0421
-static int isVtssGigaPHY(int ge)
+static int isVtssGigaPHY(void)
 {
 	u32 phy_id0,phy_id1;
-        u32 phy_addr = 0;
 
-	if(ge == 1)
-	    phy_addr = MAC_TO_GIGAPHY_MODE_ADDR;
-#if defined (P4_MAC_TO_PHY_MODE)	
-	else 
-	    phy_addr = MAC_TO_GIGAPHY_MODE_ADDR2;
-#endif
-	if( ! mii_mgr_read(phy_addr, 2, &phy_id0)){
+	if( ! mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 2, &phy_id0)){
 		printf("\n Read PhyID 0 is Fail!!\n");
 		phy_id0 =0;
 	}
 
-	if( ! mii_mgr_read(phy_addr, 3, &phy_id1)){
+	if( ! mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 3, &phy_id1)){
 		printf("\n Read PhyID 1 is Fail!!\n");
 		phy_id1 = 0;
 	}
@@ -1175,63 +1020,14 @@ static int isVtssGigaPHY(int ge)
 
 #if defined (MAC_TO_GIGAPHY_MODE) || defined (P5_MAC_TO_PHY_MODE) || defined (MAC_TO_100PHY_MODE)
 
-#if defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
-    defined (RT6855A_ASIC_BOARD) || defined (RT6855A_FPGA_BOARD)
-    
-
-void enable_auto_negotiate(void)
-{
-	u32 regValue;
-	u32 addr = MAC_TO_GIGAPHY_MODE_ADDR;	// define in config.mk
-
-	regValue = le32_to_cpu(*(volatile u_long *)(RALINK_ETH_SW_BASE+0x7000));
-	regValue |= (1<<31);
-	regValue &= ~(0x1f);
-	regValue &= ~(0x1f<<8);
-	regValue |= (addr << 0);// setup PHY address for auto polling (start Addr).
-	regValue |= (addr << 8);// setup PHY address for auto polling (End Addr).
-	
-	*(volatile u_long *)(RALINK_ETH_SW_BASE+0x7000) = cpu_to_le32(regValue);
-}
-
-#elif defined (RT6352_ASIC_BOARD) || defined (RT6352_FPGA_BOARD) || \
-      defined (RT71100_ASIC_BOARD) || defined (RT71100_FPGA_BOARD)
-
-void enable_auto_negotiate(void)
-{
-	u32 regValue;
-	u32 addr = MAC_TO_GIGAPHY_MODE_ADDR;	// define in config.mk
-
-	regValue = le32_to_cpu(*(volatile u_long *)(RALINK_ETH_SW_BASE+0x7000));
-	regValue |= (1<<31);
-	regValue &= ~(0x1f);
-	regValue &= ~(0x1f<<8);
-	regValue |= ((addr-1) << 0);// setup PHY address for auto polling (start Addr).
-	regValue |= (addr << 8);// setup PHY address for auto polling (End Addr).
-	
-	*(volatile u_long *)(RALINK_ETH_SW_BASE+0x7000) = cpu_to_le32(regValue);
-
-#if defined (P4_MAC_TO_PHY_MODE)      
-	*(volatile u_long *)(RALINK_ETH_SW_BASE+0x3400) &= ~(0x1 << 15);
-#endif
-#if defined (P5_MAC_TO_PHY_MODE) 
-	*(volatile u_long*)(RALINK_ETH_SW_BASE+0x3500) &= ~(0x1 << 15);
-#endif
-
-}
-
-#elif defined (RT2880_ASIC_BOARD) || defined (RT2880_FPGA_BOARD) || \
-      defined (RT3883_ASIC_BOARD) || defined (RT3883_FPGA_BOARD) || \
-      defined (RT3052_ASIC_BOARD) || defined (RT3052_FPGA_BOARD) || \
-      defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD)
 void enable_auto_negotiate(void)
 {
 	u32 regValue;
 	u32 addr = MAC_TO_GIGAPHY_MODE_ADDR;	// define in config.mk
 
 #if defined (RT3052_ASIC_BOARD) || defined (RT3052_FPGA_BOARD) || \
-    defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) 
-	regValue = le32_to_cpu(*(volatile u_long *)(RALINK_ETH_SW_BASE+0x00C8));
+    defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD)
+	regValue = le32_to_cpu(*(volatile u_long *)(0xb01100C8));
 #else
 	regValue = RALINK_REG(MDIO_CFG);
 #endif
@@ -1243,14 +1039,13 @@ void enable_auto_negotiate(void)
 
 #if defined (RT3052_ASIC_BOARD) || defined (RT3052_FPGA_BOARD) || \
     defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD)
-	*(volatile u_long *)(RALINK_ETH_SW_BASE+0x00C8) = cpu_to_le32(regValue);
+	*(volatile u_long *)(0xb01100C8) = cpu_to_le32(regValue);
 #else
 	RALINK_REG(MDIO_CFG) = cpu_to_le32(regValue);
 #endif
 
 }
-#else
-#endif
+
 #endif // defined (MAC_TO_GIGAPHY_MODE) || defined (P5_MAC_TO_PHY_MODE) || defined (MAC_TO_100PHY_MODE) //
 
 int isDMABusy(struct eth_device* dev)
@@ -1270,315 +1065,6 @@ int isDMABusy(struct eth_device* dev)
 	return 0;
 }
 
-#if defined (RT6855A_ASIC_BOARD) || defined (RT6855A_FPGA_BOARD)
-void rt6855A_gsw_init(void)
-{
-	u32	i = 0;
-	u32	phy_val=0;
-	u32     rev=0;
-#if defined (RT6855A_FPGA_BOARD)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3000) = 0x5e353;//(P0, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3100) = 0x5e353;//(P1, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-	//RALINK_REG(RALINK_ETH_SW_BASE+0x3000) = 0x5e333;//(P0, Force mode, Link Up, 10Mbps, Full-Duplex, FC ON)
-	//RALINK_REG(RALINK_ETH_SW_BASE+0x3100) = 0x5e333;//(P1, Force mode, Link Up, 10Mbps, Full-Duplex, FC ON)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3200) = 0x8000;//P2, link down
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3300) = 0x8000;//P3, link down
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3400) = 0x8000;//P4, link down
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x8000;//P5, link down
-
-	/* In order to use 10M/Full on FPGA board. We configure phy capable to
-	 * 10M Full/Half duplex, so we can use auto-negotiation on PC side */
-	for (i=6; i<8; i++) {
-		mii_mgr_write(i, 4, 0x07e1);   //Capable of 10M&100M Full/Half Duplex, flow control on/off
-		//mii_mgr_write(i, 4, 0x0461);   //Capable of 10M Full/Half Duplex, flow control on/off
-		mii_mgr_write(i, 0, 0xB100);   //reset all digital logic, except phy_reg
-		mii_mgr_read(i, 9, &phy_val);
-                phy_val &= ~(3<<8); //turn off 1000Base-T Advertisement
-                mii_mgr_write(i, 9, phy_val);
-	}
-#elif defined (RT6855A_ASIC_BOARD)
-
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3600) = 0x5e33b;//CPU Port6 Force Link 1G, FC ON
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0010) = 0xffffffe0;//CPU exist in port 6
-        RALINK_REG(RALINK_FRAME_ENGINE_BASE+0x1ec) = 0x0fffffff;//Set PSE should pause 4 tx ring as default
-        RALINK_REG(RALINK_FRAME_ENGINE_BASE+0x1f0) = 0x0fffffff;//switch IOT more stable
-	RALINK_REG(RALINK_ETH_SW_BASE+0x30f0) &= ~(3 << 4); ////keep rx/tx port clock ticking, disable internal clock-gating to avoid switch stuck
-	/*
-	 *  Reg 31: Page Control
-	 *  Bit 15     => PortPageSel, 1=local, 0=global
-	 *  Bit 14:12  => PageSel, local:0~3, global:0~4
-	 *  Reg16~30:Local/Global registers
-	 */
-	/*correct  PHY  setting J8.0*/
-	mii_mgr_read(0, 31, &rev);
-        rev &= (0x0f);
-
-	mii_mgr_write(1, 31, 0x4000); //global, page 4
-
-	mii_mgr_write(1, 16, 0xd4cc);
-	mii_mgr_write(1, 17, 0x7444);
-	mii_mgr_write(1, 19, 0x0112);
-	mii_mgr_write(1, 21, 0x7160);
-	mii_mgr_write(1, 22, 0x10cf);
-	mii_mgr_write(1, 26, 0x0777);
-
-	if(rev == 0){
-	        mii_mgr_write(1, 25, 0x0102);
-		mii_mgr_write(1, 29, 0x8641);
-	}
-	else{
-	        mii_mgr_write(1, 25, 0x0212);
-		mii_mgr_write(1, 29, 0x4640);
-        }
-
-	mii_mgr_write(1, 31, 0x2000); //global, page 2
-	mii_mgr_write(1, 21, 0x0655);
-	mii_mgr_write(1, 22, 0x0fd3);
-	mii_mgr_write(1, 23, 0x003d);
-	mii_mgr_write(1, 24, 0x096e);
-	mii_mgr_write(1, 25, 0x0fed);
-	mii_mgr_write(1, 26, 0x0fc4);
-
-	mii_mgr_write(1, 31, 0x1000); //global, page 1  
-	mii_mgr_write(1, 17, 0xe7f8);
-
-	mii_mgr_write(1, 31, 0xa000); //local, page 2
-
-	mii_mgr_write(0, 16, 0x0e0e);
-	mii_mgr_write(1, 16, 0x0c0c);
-	mii_mgr_write(2, 16, 0x0f0f);
-	mii_mgr_write(3, 16, 0x1010);
-	mii_mgr_write(4, 16, 0x0909);
-
-	mii_mgr_write(0, 17, 0x0000);
-	mii_mgr_write(1, 17, 0x0000);
-	mii_mgr_write(2, 17, 0x0000);
-	mii_mgr_write(3, 17, 0x0000);
-	mii_mgr_write(4, 17, 0x0000);
-
-	/*restart AN to make PHY work normal*/
-	for (i=0; i<5; i++) {
-	    mii_mgr_read(i, 0, &phy_val);
-	    phy_val |= 1<<9; //restart AN
-	    mii_mgr_write(i, 0, phy_val);
-	}
-#endif  
-
-#if defined (RT6855A_ASIC_BOARD)
-#if defined (P5_RGMII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x5e33b; ////(P5, Force mode, Link Up, 1000Mbps, Full-Duplex, FC ON)
-#elif defined (P5_MII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x5e337; ////(P5, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-#elif defined (P5_MAC_TO_PHY_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x7014) = 0xc;//TX/RX CLOCK Phase select
-	enable_auto_negotiate();
-	if (isICPlusGigaPHY(1)) {
-	    printf("ICPLUS Phy1\n");
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 4, &phy_val);
-	    phy_val |= 1<<10; //enable pause ability
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 4, phy_val);
-
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 0, &phy_val);
-	    phy_val |= 1<<9; //restart AN
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 0, phy_val);
-	}
-	if (isMarvellGigaPHY(1)) {
-		printf("MARVELL Phy1\n");
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 20, 0x0ce0);
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 0, 0x9140);
-	}
-	if (isVtssGigaPHY(1)) {
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 31, 0x0001); //extended page
-		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 28, &phy_val);
-		printf("GE1 Vitesse Phy reg28 %x --> ",phy_val);
-		phy_val |= (0x3<<12); // RGMII RX skew compensation= 2.0 ns
-		phy_val &= ~(0x3<<14); // RGMII TX skew compensation= 0 ns
-		printf("%x (without reset PHY)\n", phy_val);
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 28, phy_val);
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 31, 0); //main registers
-	}
-#elif defined (P5_RMII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x5e337; ////(P5, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-#else /* Port 5 disabled */
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x8000; ////(P5, Link Down)
-#endif // P5_RGMII_TO_MAC_MODE //
-#endif
-}
-#endif
-
-
-
-#if defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
-    defined (RT6352_ASIC_BOARD) || defined (RT6352_FPGA_BOARD) || \
-    defined (RT71100_ASIC_BOARD) || defined (RT71100_FPGA_BOARD)
-void rt_gsw_init(void)
-{
-	u32	i = 0;
-	u32	phy_val=0;
-	u32     rev=0;
-#if defined (RT6855_FPGA_BOARD) || defined (RT6352_FPGA_BOARD) || \
-    defined (RT71100_FPGA_BOARD)
-	/*keep dump switch mode */
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3000) = 0x5e333;//(P0, Force mode, Link Up, 10Mbps, Full-Duplex, FC ON)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3100) = 0x5e333;//(P1, Force mode, Link Up, 10Mbps, Full-Duplex, FC ON)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3200) = 0x5e333;//(P2, Force mode, Link Up, 10Mbps, Full-Duplex, FC ON)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3300) = 0x5e333;//(P3, Force mode, Link Up, 10Mbps, Full-Duplex, FC ON)
-#if defined (RT6352_FPGA_BOARD)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3400) = 0x5e337;//(P4, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-#else
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3400) = 0x5e333;//(P4, Force mode, Link Up, 10Mbps, Full-Duplex, FC ON)
-#endif
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x5e337;//(P5, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-	/* In order to use 10M/Full on FPGA board. We configure phy capable to 
-	 * 10M Full/Half duplex, so we can use auto-negotiation on PC side */
-#if defined (RT6352_FPGA_BOARD)
-	for(i=0;i<4;i++){
-#else
-	for(i=0;i<5;i++){
-#endif
-	    mii_mgr_write(i, 4, 0x0461);   //Capable of 10M Full/Half Duplex, flow control on/off
-	    mii_mgr_write(i, 0, 0xB100);   //reset all digital logic, except phy_reg
-	}
-#endif  
-
-#if defined (PDMA_NEW)
-	RALINK_REG(RT2880_SYSCFG1_REG) |= (0x1 << 8); //PCIE_RC_MODE=1
-#endif
-
-#if defined (RT6352_FPGA_BOARD) || defined (RT6352_ASIC_BOARD)
-#if defined (P5_RGMII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x5e33b; ////(P5, Force mode, Link Up, 1000Mbps, Full-Duplex, FC ON)
-	RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3<<12); ////GE1_MODE=RGMii Mode
-#elif defined (P5_MII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x5e337; ////(P5, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-	RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3 << 12); //GE1_MODE=Mii Mode
-	RALINK_REG(RT2880_SYSCFG1_REG) |= (0x1 << 12);
-#elif defined (P5_MAC_TO_PHY_MODE)
-	RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
-	RALINK_REG(0xb0000060) &= ~(3 << 7); //set MDIO to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3 << 12); //GE1_MODE=RGMii Mode
-	enable_auto_negotiate();
-	if (isICPlusGigaPHY(1)) {
-	    printf("ICPLUS Phy1\n");
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 4, &phy_val);
-	    phy_val |= 1<<10; //enable pause ability
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 4, phy_val);
-
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 0, &phy_val);
-	    phy_val |= 1<<9; //restart AN
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 0, phy_val);
-	}
-	if (isMarvellGigaPHY(1)) {
-		printf("MARVELL Phy1\n");
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 20, 0x0ce0);
-#if defined (RT6352_FPGA_BOARD)
-		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 9, &phy_val);
-		phy_val &= ~(3<<8); //turn off 1000Base-T Advertisement
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 9, phy_val);
-#endif
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 0, 0x9140);
-	}
-	if (isVtssGigaPHY(1)) {
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 31, 0x0001); //extended page
-		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 28, &phy_val);
-		printf("GE1 Vitesse Phy reg28 %x --> ",phy_val);
-		phy_val |= (0x3<<12); // RGMII RX skew compensation= 2.0 ns
-		phy_val &= ~(0x3<<14); // RGMII TX skew compensation= 0 ns
-		printf("%x (without reset PHY)\n", phy_val);
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 28, phy_val);
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 31, 0); //main registers
-	}
-#elif defined (P5_RMII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x5e337; ////(P5, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-        RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3 << 12); //GE1_MODE=Mii Mode
-	RALINK_REG(RT2880_SYSCFG1_REG) |= (0x2 << 12);
-#else /* Port 5 disabled */
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3500) = 0x8000; ////(P5, Link Down)
-#endif // P5_RGMII_TO_MAC_MODE //
-#endif
-
-
-#if defined (P4_RGMII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3400) = 0x5e33b; ////(P4, Force mode, Link Up, 1000Mbps, Full-Duplex, FC ON)
-	RALINK_REG(0xb0000060) &= ~(1 << 10); //set RGMII to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3<<14); ////GE2_MODE=RGMii Mode
-#elif defined (P4_MII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3400) = 0x5e337; ////(P4, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-	RALINK_REG(0xb0000060) &= ~(1 << 10); //set RGMII2 to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3 << 14); //GE2_MODE=Mii Mode
-	RALINK_REG(RT2880_SYSCFG1_REG) |= (0x1 << 14);
-#elif defined (P4_MAC_TO_PHY_MODE)
-	RALINK_REG(0xb0000060) &= ~(1 << 10); //set RGMII2 to Normal mode
-	RALINK_REG(0xb0000060) &= ~(3 << 7); //set MDIO to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3<<14); ////GE2_MODE=RGMii Mode
-#if defined (RT6352_FPGA_BOARD)
-	    mii_mgr_write(4, 4, 0x05e1);   //Capable of 100M Full/Half Duplex, flow control on/off
-	    mii_mgr_write(4, 0, 0xB100);   //reset all digital logic, except phy_reg
-#endif
-	enable_auto_negotiate();
-	if (isICPlusGigaPHY(2)) {
-	    printf("ICPLUS Phy2\n");
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR2, 4, &phy_val);
-	    phy_val |= 1<<10; //enable pause ability
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 4, phy_val);
-
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR2, 0, &phy_val);
-	    phy_val |= 1<<9; //restart AN
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 0, phy_val);
-	}
-	if (isMarvellGigaPHY(2)) {
-		printf("MARVELL Phy2\n");
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 20, 0x0ce0);
-#if defined (RT6352_FPGA_BOARD)
-		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR2, 9, &phy_val);
-		phy_val &= ~(3<<8); //turn off 1000Base-T Advertisement
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 9, phy_val);
-#endif
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 0, 0x9140);
-	}
-	if (isVtssGigaPHY(2)) {
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 31, 0x0001); //extended page
-		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR2, 28, &phy_val);
-		printf("GE1 Vitesse Phy reg28 %x --> ",phy_val);
-		phy_val |= (0x3<<12); // RGMII RX skew compensation= 2.0 ns
-		phy_val &= ~(0x3<<14); // RGMII TX skew compensation= 0 ns
-		printf("%x (without reset PHY)\n", phy_val);
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 28, phy_val);
-		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR2, 31, 0); //main registers
-	}
-#elif defined (P4_RMII_TO_MAC_MODE)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x3400) = 0x5e337; ////(P4, Force mode, Link Up, 100Mbps, Full-Duplex, FC ON)
-        RALINK_REG(0xb0000060) &= ~(1 << 10); //set RGMII2 to Normal mode
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3 << 14); //GE2_MODE=Mii Mode
-	RALINK_REG(RT2880_SYSCFG1_REG) |= (0x2 << 14);
-#else /* Port 4 disabled */
-
-#endif // P4_RGMII_TO_MAC_MODE //
-}
-#endif
-
-#if defined (RT6855A_FPGA_BOARD)
-void rt6855A_eth_gpio_reset(void)
-{
-	u8 ether_gpio = 12;
-
-	/* Load the ethernet gpio value to reset Ethernet PHY */
-	ra_or(RALINK_PIO_BASE, 1<<(ether_gpio<<1));
-	ra_or(RALINK_PIO_BASE+0x14, 1<<ether_gpio);
-
-	ra_and(RALINK_PIO_BASE+0x4, ~(1<<ether_gpio));
-	udelay(100000);
-
-	ra_or(RALINK_PIO_BASE+0x4, 1<<ether_gpio);
-	/* must wait for 0.6 seconds after reset*/
-	udelay(600000);
-}
-#endif
-
-
 #if defined (RT3052_ASIC_BOARD) || defined (RT3052_FPGA_BOARD) || \
     defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || \
     defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
@@ -1591,34 +1077,23 @@ void rt305x_esw_init(void)
 	 * FC_RLS_TH=200, FC_SET_TH=160
 	 * DROP_RLS=120, DROP_SET_TH=80
 	 */
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0008) = 0xC8A07850;       
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00E4) = 0x00000000;
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0014) = 0x00405555;
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0090) = 0x00007f7f;
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0098) = 0x00007f7f; //disable VLAN
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00CC) = 0x0002500c;
-#ifndef CONFIG_UNH_TEST
-	RALINK_REG(RALINK_ETH_SW_BASE+0x009C) = 0x0008a301; //hashing algorithm=XOR48, aging interval=300sec
-#else
-	/*
-	 * bit[30]:1	Backoff Algorithm Option: The latest one to pass UNH test
-	 * bit[29]:1	Length of Received Frame Check Enable
-	 * bit[8]:0	Enable collision 16 packet abort and late collision abort
-	 * bit[7:6]:01	Maximum Packet Length: 1518
-	 */
-	RALINK_REG(RALINK_ETH_SW_BASE+0x009C) = 0x6008a241;
-#endif
-	RALINK_REG(RALINK_ETH_SW_BASE+0x008C) = 0x02404040; 
+	RALINK_REG(0xb0110008) = 0xC8A07850;       
+	RALINK_REG(0xb01100E4) = 0x00000000;
+	RALINK_REG(0xb0110014) = 0x00405555;
+	RALINK_REG(0xb0110090) = 0x00007f7f;
+	RALINK_REG(0xb0110098) = 0x00007f7f; //disable VLAN
+	RALINK_REG(0xb01100CC) = 0x0002500c;
+	RALINK_REG(0xb011009C) = 0x0008a301; //hashing algorithm=XOR48, aging interval=300sec
+	RALINK_REG(0xb011008C) = 0x02404040; 
 
-#if defined (RT3052_ASIC_BOARD) || defined (RT3352_ASIC_BOARD) || defined (RT5350_ASIC_BOARD) 
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) = 0x3f502b28; //Ext PHY Addr=0x1F 
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0084) = 0x00000000;
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0110) = 0x7d000000; //1us cycle number=125 (FE's clock=125Mhz)
-#elif defined (RT3052_FPGA_BOARD) || defined (RT3352_FPGA_BOARD) || defined (RT5350_FPGA_BOARD) 
-
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) = 0x00f03ff9; //polling Ext PHY Addr=0x0, force port5 as 100F/D (disable auto-polling)
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0084) = 0xffdf1f00;
-	RALINK_REG(RALINK_ETH_SW_BASE+0x0110) = 0x0d000000; //1us cycle number=13 (FE's clock=12.5Mhz)
+#if defined (RT3052_ASIC_BOARD) || defined (RT3352_ASIC_BOARD) || defined (RT5350_ASIC_BOARD)
+	RALINK_REG(0xb01100C8) = 0x3f502b28; //Ext PHY Addr=0x1F 
+	RALINK_REG(0xb0110084) = 0x00000000;
+	RALINK_REG(0xb0110110) = 0x7d000000; //1us cycle number=125 (FE's clock=125Mhz)
+#elif defined (RT3052_FPGA_BOARD) || defined (RT3352_FPGA_BOARD) || defined (RT5350_FPGA_BOARD)
+	RALINK_REG(0xb01100C8) = 0x20f02b28; //Ext PHY Addr=0x0 
+	RALINK_REG(0xb0110084) = 0xffdf1f00;
+	RALINK_REG(0xb0110110) = 0x0d000000; //1us cycle number=13 (FE's clock=12.5Mhz)
 
 	/* In order to use 10M/Full on FPGA board. We configure phy capable to 
 	 * 10M Full/Half duplex, so we can use auto-negotiation on PC side */
@@ -1630,35 +1105,19 @@ void rt305x_esw_init(void)
 
 #if defined (P5_RGMII_TO_MAC_MODE)
 	RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(1<<29); //disable port 5 auto-polling
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) |= 0x3fff; //force 1000M full duplex
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(0xf<<20); //rxclk_skew, txclk_skew = 0
+	RALINK_REG(0xb01100C8) &= ~(1<<29); //disable port 5 auto-polling
+	RALINK_REG(0xb01100C8) |= 0x3fff; //force 1000M full duplex
+	RALINK_REG(0xb01100C8) &= ~(0xf<<20); //rxclk_skew, txclk_skew = 0
 #elif defined (P5_MII_TO_MAC_MODE)
 	RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(1<<29); //disable port 5 auto-polling
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(0x3fff);
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) |= 0x3ffd; //force 100M full duplex
-#if defined (RT3352_ASIC_BOARD)
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3 << 12); //GE1_MODE=Mii Mode
-	RALINK_REG(RT2880_SYSCFG1_REG) |= (0x1 << 12);
-#endif
+	RALINK_REG(0xb01100C8) &= ~(1<<29); //disable port 5 auto-polling
+	RALINK_REG(0xb01100C8) &= ~(0x3fff);
+	RALINK_REG(0xb01100C8) |= 0x3ffd; //force 100M full duplex
 #elif defined (P5_MAC_TO_PHY_MODE)
 	RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
 	RALINK_REG(0xb0000060) &= ~(1 << 7); //set MDIO to Normal mode
-#if defined (RT3052_ASIC_BOARD) || defined(RT3352_ASIC_BOARD)
 	enable_auto_negotiate();
-#endif
-	if (isICPlusGigaPHY(1)) {
-	    printf("\n ICPLUS Phy\n");
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 4, &phy_val);
-	    phy_val |= 1<<10; //enable pause ability
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 4, phy_val);
-
-	    mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 0, &phy_val);
-	    phy_val |= 1<<9; //restart AN
-	    mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 0, phy_val);
-	}
-	if (isMarvellGigaPHY(1)) {
+	if (isMarvellGigaPHY()) {
 		printf("\n MARVELL Phy\n");
 		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 20, 0x0ce0);
 #if defined (RT3052_FPGA_BOARD) || defined(RT3352_FPGA_BOARD)
@@ -1668,7 +1127,7 @@ void rt305x_esw_init(void)
 #endif
 		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 0, 0x9140);
 	}
-	if (isVtssGigaPHY(1)) {
+	if (isVtssGigaPHY()) {
 		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 31, 0x0001); //extended page
 		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 28, &phy_val);
 		printf("GE1 Vitesse Phy reg28 %x --> ",phy_val);
@@ -1681,32 +1140,15 @@ void rt305x_esw_init(void)
 #elif defined (P5_RMII_TO_MAC_MODE)
 	/* Reserved */
 	RALINK_REG(0xb0000060) &= ~(1 << 9); //set RGMII to Normal mode
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(1<<29); //disable port 5 auto-polling
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(0x3fff);
-	RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) |= 0x3ffd; //force 100M full duplex
-#if defined (RT3352_ASIC_BOARD)
-	RALINK_REG(RT2880_SYSCFG1_REG) &= ~(0x3 << 12); //GE1_MODE=RvMii Mode
-	RALINK_REG(RT2880_SYSCFG1_REG) |= (0x2 << 12);
-#endif
+	RALINK_REG(0xb01100C8) &= ~(1<<29); //disable port 5 auto-polling
+	RALINK_REG(0xb01100C8) &= ~(0x3fff);
+	RALINK_REG(0xb01100C8) |= 0x3ffd; //force 100M full duplex
+
 #else /* Port 5 disabled */
-
-#if defined (RT3052_ASIC_BOARD)
-        RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(1 << 29); //port5 auto polling disable
-        RALINK_REG(0xb0000060) |= (1 << 7); //set MDIO to GPIO mode (GPIO22-GPIO23)
-        RALINK_REG(0xb0000060) |= (1 << 9); //set RGMII to GPIO mode (GPIO41-GPIO50)
-        RALINK_REG(0xb0000674) = 0xFFF; //GPIO41-GPIO50 output mode
-        RALINK_REG(0xb000067C) = 0x0; //GPIO41-GPIO50 output low
-#elif defined (RT3352_ASIC_BOARD)
-        RALINK_REG(RALINK_ETH_SW_BASE+0x00C8) &= ~(1 << 29); //port5 auto polling disable
-        RALINK_REG(0xb0000060) |= (1 << 7); //set MDIO to GPIO mode (GPIO22-GPIO23)
-        RALINK_REG(0xb0000624) = 0xC0000000; //GPIO22-GPIO23 output mode
-        RALINK_REG(0xb000062C) = 0xC0000000; //GPIO22-GPIO23 output high
-
-        RALINK_REG(0xb0000060) |= (1 << 9); //set RGMII to GPIO mode (GPIO24-GPIO35)
-        RALINK_REG(0xb000064C) = 0xFFF; //GPIO24-GPIO35 output mode
-        RALINK_REG(0xb0000654) = 0xFFF; //GPIO24-GPIO35 output high
-#endif
-
+	RALINK_REG(0xb01100C8) &= ~(1 << 29); //port5 auto polling disable
+	RALINK_REG(0xb0000060) |= (1 << 9); //set RGMII to GPIO mode (GPIO41-GPIO50)
+	RALINK_REG(0xb0000674) = 0xFDF; //GPIO41-GPIO50 output mode, for RT3352 GPIO40-GPIO45 will set GPIO45 as input mode 
+	RALINK_REG(0xb0000670) = 0x0; //GPIO41-GPIO50 output low
 #endif // P5_RGMII_TO_MAC_MODE //
 
 #define RSTCTRL_EPHY_RST	(1<<24)
@@ -1736,8 +1178,8 @@ void rt305x_esw_init(void)
 	    mii_mgr_write(0, 31, 0x8000);
 	    for(i=0;i<5;i++){
 		mii_mgr_write(i, 26, 0x1600);   //TX10 waveform coefficient //LSB=0 disable PHY
-		mii_mgr_write(i, 29, 0x7058);   //TX100/TX10 AD/DA current bias
-		mii_mgr_write(i, 30, 0x0018);   //TX100 slew rate control
+		mii_mgr_write(i, 29, 0x7015);   //TX100/TX10 AD/DA current bias
+		mii_mgr_write(i, 30, 0x0038);   //TX100 slew rate control
 	    }
 
 	    //select global register
@@ -1745,19 +1187,13 @@ void rt305x_esw_init(void)
 	    mii_mgr_write(0,  1, 0x4a40); //enlarge agcsel threshold 3 and threshold 2
 	    mii_mgr_write(0,  2, 0x6254); //enlarge agcsel threshold 5 and threshold 4
 	    mii_mgr_write(0,  3, 0xa17f); //enlarge agcsel threshold 6
-//#define ENABLE_LDPS
-#if defined (ENABLE_LDPS)
-            mii_mgr_write(0, 12, 0x7eaa);
-            mii_mgr_write(0, 22, 0x252f); //tune TP_IDL tail and head waveform, enable power down slew rate control
-#else
-            mii_mgr_write(0, 12, 0x0);
-            mii_mgr_write(0, 22, 0x052f);
-#endif
+	    mii_mgr_write(0, 12, 0x7eaa);
 	    mii_mgr_write(0, 14, 0x65);   //longer TP_IDL tail length
 	    mii_mgr_write(0, 16, 0x0684); //increased squelch pulse count threshold.
 	    mii_mgr_write(0, 17, 0x0fe0); //set TX10 signal amplitude threshold to minimum
 	    mii_mgr_write(0, 18, 0x40ba); //set squelch amplitude to higher threshold
-	    mii_mgr_write(0, 27, 0x2fce); //set PLL/Receive bias current are calibrated
+	    mii_mgr_write(0, 22, 0x252f); //tune TP_IDL tail and head waveform, enable power down slew rate control
+	    mii_mgr_write(0, 27, 0x2fda); //set PLL/Receive bias current are calibrated
 	    mii_mgr_write(0, 28, 0xc410); //change PLL/Receive bias current to internal(RT3350)
 	    mii_mgr_write(0, 29, 0x598b); //change PLL bias current to internal(RT3052_MP3)
 	    mii_mgr_write(0, 31, 0x8000); //select local register
@@ -1880,12 +1316,6 @@ void rt305x_esw_init(void)
 	    phy_val |= 0x0001;
 	    mii_mgr_write(i, 26, phy_val);
 	}
-#elif defined (RT6855_ASIC_BOARD)
-	/* TBD */
-#elif defined (RT6352_ASIC_BOARD)
-	/* TBD */
-#elif defined (RT71100_ASIC_BOARD)
-	/* TBD */
 #else
 #error "Chip is not supported"
 #endif // RT3052_ASIC_BOARD //
@@ -1911,7 +1341,7 @@ static int rt2880_eth_setup(struct eth_device* dev)
 // GigaPhy
 #if defined (MAC_TO_GIGAPHY_MODE) 
 	enable_auto_negotiate();
-	if (isMarvellGigaPHY(1)) {
+	if (isMarvellGigaPHY()) {
 #if defined (RT3883_FPGA_BOARD) 
 		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 9, &regValue);
 		regValue &= ~(3<<8); //turn off 1000Base-T Advertisement
@@ -1926,7 +1356,7 @@ static int rt2880_eth_setup(struct eth_device* dev)
 		regValue |= 1<<15; //PHY Software Reset
 		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 0, regValue);
 	}
-	if (isVtssGigaPHY(1)) {
+	if (isVtssGigaPHY()) {
 		mii_mgr_write(MAC_TO_GIGAPHY_MODE_ADDR, 31, 1);
 		mii_mgr_read(MAC_TO_GIGAPHY_MODE_ADDR, 28, &regValue);
 		printf("GE1 Vitesse Phy reg28 %x --> ",regValue);
@@ -1946,12 +1376,8 @@ static int rt2880_eth_setup(struct eth_device* dev)
 // RT305x/RT335x + EmbeddedSW
 #elif defined (RT3052_ASIC_BOARD) || defined (RT3052_FPGA_BOARD) || \
       defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || \
-      defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD) || \
-      defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
-      defined (RT6855A_ASIC_BOARD) || defined (RT6855A_FPGA_BOARD) || \
-      defined (RT6352_ASIC_BOARD) || defined (RT6352_FPGA_BOARD) || \
-      defined (RT71100_ASIC_BOARD) || defined (RT71100_FPGA_BOARD)
-
+      defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD) 
+	rt305x_esw_init();
 #ifdef P5_RGMII_TO_MAC_MODE
 	printf("\n Vitesse giga Mac support \n");
 	ResetSWusingGPIOx();
@@ -2065,7 +1491,7 @@ static int rt2880_eth_setup(struct eth_device* dev)
 	wTmp = (u16)dev->enetaddr[0];
 	regValue = (wTmp << 8) | dev->enetaddr[1];
 
-#if defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
+#if  defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
 	RALINK_REG(SDM_MAC_ADRH)=regValue;
 	// printf("\n dev->iobase=%08X,SDM_MAC_ADRH=%08X\n",dev->iobase,regValue);
 #else
@@ -2078,7 +1504,7 @@ static int rt2880_eth_setup(struct eth_device* dev)
 	regValue = regValue << 16;
 	wTmp = (u16)dev->enetaddr[4];
 	regValue |= (wTmp<<8) | dev->enetaddr[5];
-#if defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
+#if  defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
 	RALINK_REG(SDM_MAC_ADRL)=regValue;
 	// printf("\n dev->iobase=%08X,SDM_MAC_ADRL=%08X\n",dev->iobase,regValue);
 #else
@@ -2094,10 +1520,6 @@ static int rt2880_eth_setup(struct eth_device* dev)
 	regValue = RALINK_REG(GDMA1_FWD_CFG);
 	//printf("\n old,GDMA1_FWD_CFG = %08X \n",regValue);
 
-#if defined (PDMA_NEW)
-	//frames destination port = port 0 CPU
-	regValue = regValue & ~(0x7);
-#else
 	//Uni-cast frames forward to CPU
 	regValue = regValue & GDM_UFRC_P_CPU;
 	//Broad-cast MAC address frames forward to CPU
@@ -2106,7 +1528,6 @@ static int rt2880_eth_setup(struct eth_device* dev)
 	regValue = regValue & GDM_MFRC_P_CPU;
 	//Other MAC address frames forward to CPU
 	regValue = regValue & GDM_OFRC_P_CPU;
-#endif
 
 	RALINK_REG(GDMA1_FWD_CFG)=regValue;
 	udelay(500);
@@ -2160,12 +1581,7 @@ static int rt2880_eth_setup(struct eth_device* dev)
 			BUFFER_ELEM *buf;
 			buf = rt2880_free_buf_entry_dequeue(&rt2880_free_buf_list);
 			NetRxPackets[i] = buf->pbuf;
-#if defined (RX_SCATTER_GATTER_DMA)
-			rx_ring[i].rxd_info2.LS0= 0;
-			rx_ring[i].rxd_info2.PLEN0= PKTSIZE_ALIGN;
-#else
 			rx_ring[i].rxd_info2.LS0= 1;
-#endif
 			rx_ring[i].rxd_info1.PDP0 = cpu_to_le32(phys_to_bus((u32) NetRxPackets[i]));
 		}
 	}
@@ -2186,26 +1602,18 @@ static int rt2880_eth_setup(struct eth_device* dev)
 		 *  7:Discard
 		 */
 		if (internal_loopback_test == INTERNAL_LOOPBACK_ENABLE) {
-#if defined (PDMA_NEW)
-			tx_ring0[i].txd_info4.FP_BMAP=0x40;
-#else
 			tx_ring0[i].txd_info4.PN = 0;
 			printf("\n Ring0,Set TX DMA loop back to CPU !! \n");
-#endif
-
 		}
 		else {
 #ifdef RT3883_USE_GE2
 			tx_ring0[i].txd_info4.PN = 2;
 #else
-#if defined (PDMA_NEW)
-			tx_ring0[i].txd_info4.FP_BMAP=0x0;
-#else
 			tx_ring0[i].txd_info4.PN = 1;
-#endif
 #endif
 		}
 
+		tx_ring0[i].txd_info4.QN = 0;
 	}
 
 #ifdef RALINK_GDMA_DUP_TX_RING_TEST_FUN
@@ -2225,22 +1633,14 @@ static int rt2880_eth_setup(struct eth_device* dev)
 		 *  7:Discard
 		 */
 		if (internal_loopback_test == INTERNAL_LOOPBACK_ENABLE) {
-#if defined (PDMA_NEW)
-			tx_ring0[i].txd_info4.FP_BMAP=0x40;
-#else
 			tx_ring1[i].txd_info4.PN = 0;
-#endif
 			printf("\n Ring1,Set TX DMA loop back to CPU ! \n");
 		}
 		else {
 #ifdef RT3883_USE_GE2
 			tx_ring1[i].txd_info4.PN = 2;
 #else
-#if defined (PDMA_NEW)
-			tx_ring0[i].txd_info4.FP_BMAP=0x0;
-#else
 			tx_ring1[i].txd_info4.PN = 1;
-#endif
 #endif
 		}
 
@@ -2328,12 +1728,7 @@ static int rt2880_eth_send(struct eth_device* dev, volatile void *packet, int le
 #endif
 #if defined (RT3052_FPGA_BOARD) || defined (RT3052_ASIC_BOARD) || \
     defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || \
-    defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD) || \
-    defined (RT3883_ASIC_BOARD) || defined (RT3883_FPGA_BOARD) || \
-    defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
-    defined (RT6855A_ASIC_BOARD) || defined (RT6855A_FPGA_BOARD) || \
-    defined (RT6352_ASIC_BOARD) || defined (RT6352_FPGA_BOARD) || \
-    defined (RT71100_ASIC_BOARD) || defined (RT71100_FPGA_BOARD)
+    defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
 	char *p=(char *)packet;
 #endif
 
@@ -2349,10 +1744,8 @@ Retry:
 
 #if defined (RT3052_FPGA_BOARD) || defined (RT3052_ASIC_BOARD) || \
     defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || \
-    defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD) || \
-    defined (RT3883_ASIC_BOARD) || defined (RT3883_FPGA_BOARD) || \
-    defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
-    defined (RT6855A_ASIC_BOARD) || defined (RT6855A_FPGA_BOARD)
+    defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
+	/* padding to 60 bytes for 3052 */
 #define PADDING_LENGTH 60
 	if (length < PADDING_LENGTH) {
 		//	print_packet(packet,length);
@@ -2914,11 +2307,7 @@ static int rt2880_eth_recv(struct eth_device* dev)
 			else
 #endif // RALINK_GDMA_SCATTER_TEST_FUN //
 			{
-#if defined (PDMA_NEW)
-				if(rx_ring[rx_dma_owner_idx0].rxd_info4.SP == 6)
-#else
 				if(rx_ring[rx_dma_owner_idx0].rxd_info4.SP == 0)
-#endif
 				{// Packet received from CPU port
 					printf("\n Normal Mode,Packet received from CPU port,plen=%d \n",length);
 					//print_packet((void *)KSEG1ADDR(NetRxPackets[rx_dma_owner_idx0]),length);
@@ -2930,18 +2319,18 @@ static int rt2880_eth_recv(struct eth_device* dev)
 			}
 		}
 
-#if  defined (RX_SCATTER_GATTER_DMA)
+		#if 0
 		rx_ring[rx_dma_owner_idx0].rxd_info2.DDONE_bit = 0;
-		rx_ring[rx_dma_owner_idx0].rxd_info2.LS0= 0;
-		rx_ring[rx_dma_owner_idx0].rxd_info2.PLEN0= PKTSIZE_ALIGN;
-#else
+		rx_ring[rx_dma_owner_idx0].rxd_info2.PLEN = 0;
+		#else
+
 		rxd_info = (u32 *)&rx_ring[rx_dma_owner_idx0].rxd_info4;
 		*rxd_info = 0;
 
 		rxd_info = (u32 *)&rx_ring[rx_dma_owner_idx0].rxd_info2;
 		*rxd_info = 0;
 		rx_ring[rx_dma_owner_idx0].rxd_info2.LS0= 1;
-#endif
+		#endif
 
 		/* Tell the adapter where the TX/RX rings are located. */
 		RALINK_REG(RX_BASE_PTR0)=phys_to_bus((u32) &rx_ring[0]);
@@ -3545,9 +2934,7 @@ int do_eth_loopback(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("\n Set to Normal mode ! \n");
 	}
 	else {
-		eth_init(NULL);
 		eth_loopback_mode=1;
-		rt2880_eth_recv(rt2880_pdev);
 		printf("\n Set to LoopBack mode ! \n");
 	}
 	return 0;
@@ -6166,28 +5553,28 @@ unsigned int rt3052_ether_setup()
 		phy_link_detect();
 		// PVID initlize for each port
 		// port 0 -> VID 1, port 1 -> VID2
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0040) = 0x00002001;
+		*(unsigned long *)(0xb0110040) = 0x00002001;
 		// port 2 -> VID3, port 3 -> VID4
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0044) = 0x00004003;
+		*(unsigned long *)(0xb0110044) = 0x00004003;
 		// port 4-> VID5, port 5(MII Port) -> VID6
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0048) = 0x00006005;
+		*(unsigned long *)(0xb0110048) = 0x00006005;
 		// port 6 -> VID7 (CPU Port)
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x004c) = 0x00000007;
+		*(unsigned long *)(0xb011004c) = 0x00000007;
 
 		// VLAN member set
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0070) = 0x48444241;
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0074) = 0x00406050;
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0078) = 0x0;
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x007c) = 0x0;
+		*(unsigned long *)(0xb0110070) = 0x48444241;
+		*(unsigned long *)(0xb0110074) = 0x00406050;
+		*(unsigned long *)(0xb0110078) = 0x0;
+		*(unsigned long *)(0xb011007c) = 0x0;
 
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0094) = 0x00007f00;
-		*(unsigned long *)(RALINK_ETH_SW_BASE+0x0098) = 0x00007f7f;
+		*(unsigned long *)(0xb0110094) = 0x00007f00;
+		*(unsigned long *)(0xb0110098) = 0x00007f7f;
 		
-		// *(unsigned long *)(RALINK_ETH_SW_BASE+0x0098) = 0x00007fff;
+		// *(unsigned long *)(0xb0110098) = 0x00007fff;
 
 		// let switch enter force mode
 		// -> Let Link Up and 100MB Full
-		// *(unsigned long *)(RALINK_ETH_SW_BASE+0x0084) = 0xffffff00;
+		// *(unsigned long *)(0xb0110084) = 0xffffff00;
 		mii_mgr_read(0, 1, &mdio_value);
 		printf("++ Port0 Reg1 mdio data is 0x%08x\n", mdio_value);
 	}
@@ -6332,7 +5719,7 @@ int mac_link_status_check()
 	u32 port_ability;
 	int data;
 
-	port_ability = *(unsigned long *)(RALINK_ETH_SW_BASE+0x0080);
+	port_ability = *(unsigned long *)(0xb0110080);
 	data = (port_ability & 0x3e000000);
 	return data;
 }
@@ -6359,14 +5746,14 @@ void phy_link_detect()
 	unsigned long port_ability, mem_test_info, phy_mdio_reg;
         int j=0;
 	// force_phy_an(1);
-	mem_test_info = *(unsigned long*)(RALINK_ETH_SW_BASE+0x00dc);
+	mem_test_info = *(unsigned long*)(0xb01100dc);
 #define MEM_TEST_BIT	(1<<6)
 	
 	while(!(mem_test_info & MEM_TEST_BIT)) {
-		mem_test_info = *(unsigned long*)(RALINK_ETH_SW_BASE+0x00dc);
+		mem_test_info = *(unsigned long*)(0xb01100dc);
 		printf("#");
 	}
-	printf("Port ability - 0x%08x\n", *(unsigned long*)(RALINK_ETH_SW_BASE+0x0080));
+	printf("Port ability - 0x%08x\n", *(unsigned long*)(0xb0110080));
 
 #if 0
 	while (!(phy_mdio_link_check())) 
@@ -6399,9 +5786,9 @@ void force_phy_an(int mode)
 	unsigned long mac_port_ability;
 #if 0
 	if ( mode == 1)
-		*(unsigned long*) (RALINK_ETH_SW_BASE+0x0084) = 0xbf80bf1f;
+		*(unsigned long*) 0xb0110084 = 0xbf80bf1f;
 	else
-		*(unsigned long*) (RALINK_ETH_SW_BASE+0x0084) = 0xbf80bf00;
+		*(unsigned long*) 0xb0110084 = 0xbf80bf00;
 #endif
 	mii_mgr_write(0, 31, 0x8000);	//---> select local register
 	for ( port = 0; port < 5; port++) {
@@ -6420,7 +5807,7 @@ void force_phy_an(int mode)
 		while(1) 
 		{
 			test_nop();
-			mac_port_ability = *(unsigned long *)(RALINK_ETH_SW_BASE+0x0080);
+			mac_port_ability = *(unsigned long *)(0xb0110080);
 			printf("-- Force 100Mb phy ...POA:0x%08x\n", mac_port_ability);
 			if ( mac_port_ability & 0x1f )
 				break;
@@ -6431,7 +5818,7 @@ void force_phy_an(int mode)
 		while(1) 
 		{
 			test_nop();
-			mac_port_ability = *(unsigned long *)(RALINK_ETH_SW_BASE+0x0080);
+			mac_port_ability = *(unsigned long *)(0xb0110080);
 			i = ~(mac_port_ability & 0x1f);
 			printf("-- Force 10Mb phy ...POA:0x%08x\n", mac_port_ability);
 			if ( i != 0)
@@ -6485,20 +5872,20 @@ void rt3052_phy_batch(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uchar port_test_100M[5];
 	unsigned long gpio_led, reg_counter, mdio_value;
 #if 1
-	// *(unsigned long *)(RALINK_ETH_SW_BASE+0x0084) = 0xffd01f00;
+	// *(unsigned long *)(0xb0110084) = 0xffd01f00;
 	gpio_led_init();
 	gpio_led_set(0);
 	gpio_led_set(0x200);
 #endif
 	rt3052_ether_setup();
 	force_phy_an(0); //force 10M before send packets
-        printf("Port ability - 0x%08x\n", *(unsigned long*)(RALINK_ETH_SW_BASE+0x0080));
+        printf("Port ability - 0x%08x\n", *(unsigned long*)(0xb0110080));
 	
 	gpio_led_set(0x400);
 
 	gpio_led = 0;
 	// 10Mb Test
-	// *(unsigned long *)(RALINK_ETH_SW_BASE+0x0084) = 0xffdf1f00;
+	// *(unsigned long *)(0xb0110084) = 0xffdf1f00;
 	for (i = 1; i <=5; i++) {
 		sprintf(phy_test_cmd, "phytest %d", i);
 		run_command(phy_test_cmd, 0);
@@ -6599,19 +5986,19 @@ void rt3052_phy_batch(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uchar port_test_100M[5];
 	unsigned long gpio_led, reg_counter, mdio_value;
 #if 1
-	// *(unsigned long *)(RALINK_ETH_SW_BASE+0x0084) = 0xffd01f00;
+	// *(unsigned long *)(0xb0110084) = 0xffd01f00;
 	gpio_led_init();
 	gpio_led_set(0);
 #endif
 	rt3052_ether_setup();
 	force_phy_an(0); //force 10M before send packets
-        printf("Port ability - 0x%08x\n", *(unsigned long*)(RALINK_ETH_SW_BASE+0x0080));
+        printf("Port ability - 0x%08x\n", *(unsigned long*)(0xb0110080));
 	
 	gpio_led = 0x80;//initialize 
 	gpio_led_set(gpio_led);//GPIO7 start signal
 
 	// 10Mb Test
-	// *(unsigned long *)(RALINK_ETH_SW_BASE+0x0084) = 0xffdf1f00;
+	// *(unsigned long *)(0xb0110084) = 0xffdf1f00;
 	for (i = 1; i <=5; i++) {
 		sprintf(phy_test_cmd, "phytest %d", i);
 		run_command(phy_test_cmd, 0);

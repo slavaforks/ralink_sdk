@@ -90,8 +90,8 @@ function InitRegistrarSetting()
 	document.getElementById("SSID").value = RegistrarSSID;
 
 	if(RegistrarAuth == ""){
-		RegistrarAuth = "WPA2PSK";
-		RegistrarEncry = "AES";
+		RegistrarAuth = "WPAPSK";
+		RegistrarEncry = "TKIP";
 		RegistrarKeyType = "1";
 		RegistrarKeyIndex = "1";
 		RegistrarKey = "12345678";
@@ -346,7 +346,6 @@ function PINStart()
 	}else if(STAMode == 1){	// Registrar
 
 		if(!checkPIN(document.getElementById("PIN").value)){
-			alert('PIN code error, please try again !!');
 			return;
 		}
 
@@ -361,12 +360,6 @@ function PINStart()
 				return;
 		}
 
-		if(document.getElementById("Authenication").value == "OPEN" &&
-		   document.getElementById("EncryptTypeSelect").value == "NONE")
-		{
-			alert("This configuration does not provide any safety mechanism");
-		}
-		
 		makeRequest("/goform/WPSSTAPINReg", document.getElementById("PIN").value + " " + getSelectedSSID());
 	} 
 }
@@ -395,27 +388,24 @@ function genNewPin()
 
 function checkPIN(wsc_pin_code)
 {
-	var tmp_str = wsc_pin_code.replace("-", "");
-	var pincode = tmp_str.replace(" ", "");
-
-	document.getElementById("PIN").value = pincode;
-	if(pincode.length == 4)
-		return true;
-	if (pincode.length != 8)
+	if(wsc_pin_code == ""){
+		alert("Please input the enrollee's PIN number");
 		return false;
-
+	}
 	accum = 0;
-	accum += 3 * (parseInt(pincode / 10000000) % 10);
-	accum += 1 * (parseInt(pincode / 1000000) % 10);
-	accum += 3 * (parseInt(pincode / 100000) % 10);
-	accum += 1 * (parseInt(pincode / 10000) % 10);
-	accum += 3 * (parseInt(pincode / 1000) % 10);
-	accum += 1 * (parseInt(pincode / 100) % 10);
-	accum += 3 * (parseInt(pincode / 10) % 10);
-	accum += 1 * (parseInt(pincode / 1) % 10);
+	accum += 3 * (parseInt(wsc_pin_code / 10000000) % 10);
+	accum += 1 * (parseInt(wsc_pin_code / 1000000) % 10);
+	accum += 3 * (parseInt(wsc_pin_code / 100000) % 10);
+	accum += 1 * (parseInt(wsc_pin_code / 10000) % 10);
+	accum += 3 * (parseInt(wsc_pin_code / 1000) % 10);
+	accum += 1 * (parseInt(wsc_pin_code / 100) % 10);
+	accum += 3 * (parseInt(wsc_pin_code / 10) % 10);
+	accum += 1 * (parseInt(wsc_pin_code / 1) % 10);
 			
-	if ((accum % 10) != 0)
+	if ((accum % 10) != 0){
+		alert('PIN code error, please try again !!');
 		return false;
+	}	
 	return true;
 }
 
@@ -604,8 +594,7 @@ function RefreshClick()
 <tr class><td class="title" colspan="9" id="stawpsAPScan"> WPS AP site survey </td></tr>
 <tbody>
 <script type="text/javascript">
-//	document.write("<tr><td>No.</td><td>SSID</td><td>BSSID</td><td>RSSI</td><td>Ch.</td><td>Auth.</td><td>Encrypt</td><td>Ver.</td><td>Status</td></tr>");
-	document.write("<tr><td>No.</td><td>SSID</td><td>BSSID</td><td>RSSI</td><td>Ch.</td><td>Auth.</td><td>Encrypt</td><td>Status</td></tr>");
+	document.write("<tr><td>No.</td><td>SSID</td><td>BSSID</td><td>RSSI</td><td>Ch.</td><td>Auth.</td><td>Encrypt</td><td>Ver.</td><td>Status</td></tr>");
 
 	var i;
 	for(i=0; i < WPSAPList.length -1; i++){
@@ -660,14 +649,13 @@ function RefreshClick()
 		document.write("</td>");
 
         //Version
-		//document.write("<td>");
-		//document.write( VersionTranslate (WPSAP[6] ) );
-		//document.write("</td>");
+		document.write("<td>");
+		document.write( VersionTranslate (WPSAP[6] ) );
+		document.write("</td>");
 
         //wsc_state
 		document.write("<td>");
-		//document.write( StateTranslate ( WPSAP[7] ) );
-		document.write( StateTranslate ( WPSAP[6] ) );
+		document.write( StateTranslate ( WPSAP[7] ) );
 		document.write("</td>");
 
 		// extend
@@ -688,7 +676,7 @@ function RefreshClick()
 		<option value=Enrollee id="stawpsEnrollee">Enrollee</option>
 		<option value=Registrar id="stawpsRegistrar">Registrar</option>
 </select>
-<font id="stawpsPIN">PIN</font>:<input value="" name="PIN" id="PIN" size="10" maxlength="10" type="text">
+<font id="stawpsPIN">PIN</font>:<input value="" name="PIN" id="PIN" size="6" maxlength="16" type="text">
 <input value=" PIN Start" id="stawpsPINStart" onclick="PINStart();" type="button">
 <input value=" PBC Start" id="stawpsPBCStart" onclick="PBCStart();" type="button">
 <input value="Cancel" id="stawpsCancel" onclick="CancelSelected();" type="button">

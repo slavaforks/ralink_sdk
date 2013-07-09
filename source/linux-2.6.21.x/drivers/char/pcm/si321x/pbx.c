@@ -1,5 +1,5 @@
 /*
-** $Id: pbx.c,v 1.7 2010-07-30 07:55:38 qwert Exp $
+** $Id: pbx.c,v 1.6 2010-03-22 02:10:11 qwert Exp $
 **
 ** pbx.c
 ** PBX state machine demo
@@ -43,8 +43,6 @@ typedef struct  {
 	char * functionName; //function displayed in the menu
 	pt2Func action; //pointer to actual function that is called
 }phoneNumberType;
-
-extern pcm_config_type* ppcm_config;
 
 /*
 ** Local function prototypes
@@ -430,7 +428,7 @@ uInt16 si3210_init (void){
 	}
 
 	
-	ProSLIC_PCMTimeSlotSetup(ports[0].ProObj,ppcm_config->ts_start[0],ppcm_config->ts_start[0]);
+	ProSLIC_PCMTimeSlotSetup(ports[0].ProObj,1,1);
 	
 #if	defined(PCM_LINEAR)
 	callDoWideband(&(ports[0]));
@@ -1320,9 +1318,6 @@ static void exit (chanState *pState,ProslicInt eInput){
 
 /*
 ** $Log: pbx.c,v $
-** Revision 1.7  2010-07-30 07:55:38  qwert
-** Add si3227 driver
-**
 ** Revision 1.6  2010-03-22 02:10:11  qwert
 ** reduce compiler warning
 **

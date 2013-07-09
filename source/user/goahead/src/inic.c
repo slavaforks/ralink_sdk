@@ -4,7 +4,7 @@
  *
  *	Copyright (c) Ralink Technology Corporation All Rights Reserved.
  *
- *	$Id: inic.c,v 1.51.2.4 2012-03-30 12:31:45 chhung Exp $
+ *	$Id: inic.c,v 1.38 2010-04-01 03:53:14 chhung Exp $
  */
 
 #include	<stdlib.h>
@@ -35,14 +35,9 @@ extern int g_Raix_wsc_configured;
 static int	getRaixAutoProvisionBuilt(int eid, webs_t wp, int argc, char_t **argv);
 static int  getRaixDLSBuilt(int eid, webs_t wp, int argc, char_t **argv);
 static int	getRaixDFSBuilt(int eid, webs_t wp, int argc, char_t **argv);
-static int	getRaixCarrierBuilt(int eid, webs_t wp, int argc, char_t **argv);
 static int	getRaixWDSBuilt(int eid, webs_t wp, int argc, char_t **argv);
 static int	getRaixRVTBuilt(int eid, webs_t wp, int argc, char_t **argv);
-static int	getRaixWSCBuilt(int eid, webs_t wp, int argc, char_t **argv);
-static int	getRaixHTStream(int eid, webs_t wp, int argc, char_t **argv);
-static int	getRaixABand(int eid, webs_t wp, int argc, char_t **argv);
-static int	getRaix11nDraft3Built(int eid, webs_t wp, int argc, char_t **argv);
-static int  getRaixWAPIBuilt(int eid, webs_t wp, int argc, char_t **argv);
+static int	getSupportABand(int eid, webs_t wp, int argc, char_t **argv);
 static int  getInic11aChannels(int eid, webs_t wp, int argc, char_t **argv);
 static int  getInic11bChannels(int eid, webs_t wp, int argc, char_t **argv);
 static int  getInic11gChannels(int eid, webs_t wp, int argc, char_t **argv);
@@ -56,6 +51,7 @@ static void inicBasic(webs_t wp, char_t *path, char_t *query);
 static void inicAdvanced(webs_t wp, char_t *path, char_t *query);
 static void inicWmm(webs_t wp, char_t *path, char_t *query);
 static void inicWds(webs_t wp, char_t *path, char_t *query);
+static void inicSecurity(webs_t wp, char_t *path, char_t *query);
 static void inicwGetSecurity(webs_t wp, char_t *path, char_t *query);
 static void INICSecurity(webs_t wp, char_t *path, char_t *query);
 static void INICDeleteAccessPolicyList(webs_t wp, char_t *path, char_t *query);
@@ -72,14 +68,12 @@ typedef struct _RT_802_11_MAC_ENTRY {
 	char                    AvgRssi2;
 	unsigned int            ConnectedTime;
 	MACHTTRANSMIT_SETTING	TxRate;
-#if 0
 	unsigned int			LastRxRate;
 	int						StreamSnr[3];
 	int						SoundingRespSnr[3];
-#endif
 } RT_802_11_MAC_ENTRY;
 
-#if defined (RTDEV_WAPI_SUPPORT)
+#ifdef CONFIG_RT3090_AP_WAPI
 #define MAX_NUMBER_OF_MAC               96
 #else
 #define MAX_NUMBER_OF_MAC               32 // if MAX_MBSSID_NUM is 8, this value can't be larger than 211
@@ -95,14 +89,9 @@ void formDefineInic(void)
 	websAspDefine(T("getRaixAutoProvisionBuilt"), getRaixAutoProvisionBuilt);
 	websAspDefine(T("getRaixDLSBuilt"), getRaixDLSBuilt);
 	websAspDefine(T("getRaixDFSBuilt"), getRaixDFSBuilt);
-	websAspDefine(T("getRaixCarrierBuilt"), getRaixCarrierBuilt);
 	websAspDefine(T("getRaixWDSBuilt"), getRaixWDSBuilt);
 	websAspDefine(T("getRaixRVTBuilt"), getRaixRVTBuilt);
-	websAspDefine(T("getRaixWSCBuilt"), getRaixWSCBuilt);
-	websAspDefine(T("getRaixHTStream"), getRaixHTStream);
-	websAspDefine(T("getRaixABand"), getRaixABand);
-	websAspDefine(T("getRaix11nDraft3Built"), getRaix11nDraft3Built);
-	websAspDefine(T("getRaixWAPIBuilt"), getRaixWAPIBuilt);
+	websAspDefine(T("getSupportABand"), getSupportABand);
 	websAspDefine(T("getInic11aChannels"), getInic11aChannels);
 	websAspDefine(T("getInic11bChannels"), getInic11bChannels);
 	websAspDefine(T("getInic11gChannels"), getInic11gChannels);
@@ -586,28 +575,15 @@ static void revise_mbss_value(int old_num, int new_num)
 /* goform/inicBasic */
 static void inicBasic(webs_t wp, char_t *path, char_t *query)
 {
-	char_t	*wirelessmode, *radio;
+	char_t	*wirelessmode;
 	char_t	*ssid, *mssid_1, *mssid_2, *mssid_3, *mssid_4, *mssid_5, *mssid_6,
 			*mssid_7, *bssid_num, *broadcastssid;
 	char_t	*sz11aChannel, *sz11bChannel, *sz11gChannel, *abg_rate;
-	char_t	*n_mode, *n_bandwidth, *n_gi, *n_mcs, *n_rdg, *n_extcha, *n_amsdu, *n_stbc;
-	char_t	*n_autoba, *n_badecline, *n_disallow_tkip, *n_2040_coexit;
+	char_t	*n_mode, *n_bandwidth, *n_gi, *n_mcs, *n_rdg, *n_extcha, *n_amsdu;
+	char_t	*n_autoba, *n_badecline;
 	char_t	*tx_stream, *rx_stream;
 	int i = 0, is_n = 0, new_bssid_num, old_bssid_num = 1;
 
-	radio = websGetVar(wp, T("radiohiddenButton"), T("2"));
-	if (!strncmp(radio, "0", 2)) {
-		doSystem("iwpriv rai0 set RadioOn=0");
-		nvram_set(RTDEV_NVRAM, "RadioOff", "1");
-		websRedirect(wp, "inic/basic.asp");
-		return;
-	}
-	else if (!strncmp(radio, "1", 2)) {
-		doSystem("iwpriv rai0 set RadioOn=1");
-		nvram_set(RTDEV_NVRAM, "RadioOff", "0");
-		websRedirect(wp, "inic/basic.asp");
-		return;
-	}
 	//fetch from web input
 	wirelessmode = websGetVar(wp, T("wirelessmode"), T("9")); //9: bgn mode
 	ssid = websGetVar(wp, T("ssid"), T("")); 
@@ -630,12 +606,9 @@ static void inicBasic(webs_t wp, char_t *path, char_t *query)
 	n_mcs = websGetVar(wp, T("n_mcs"), T("33"));
 	n_rdg = websGetVar(wp, T("n_rdg"), T("0"));
 	n_extcha = websGetVar(wp, T("n_extcha"), T("0"));
-	n_stbc = websGetVar(wp, T("n_stbc"), T("0"));
 	n_amsdu = websGetVar(wp, T("n_amsdu"), T("0"));
 	n_autoba = websGetVar(wp, T("n_autoba"), T("0"));
 	n_badecline = websGetVar(wp, T("n_badecline"), T("0"));
-	n_disallow_tkip = websGetVar(wp, T("n_disallow_tkip"), T("0"));
-	n_2040_coexit = websGetVar(wp, T("n_2040_coexit"), T("0"));
 	tx_stream = websGetVar(wp, T("tx_stream"), T("0"));
 	rx_stream = websGetVar(wp, T("rx_stream"), T("0"));
 
@@ -673,17 +646,11 @@ static void inicBasic(webs_t wp, char_t *path, char_t *query)
 		nvram_commit(RTDEV_NVRAM);
 		websError(wp, 403, T("'SSID' should not be empty!"));
 		return;
-	} else {
-		i++;
-		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), ssid);
 	}
+	nvram_bufset(RTDEV_NVRAM, "SSID1", ssid);
 
 //#WPS
-	if (!strncmp(broadcastssid, "0", 2)) {
-		nvram_bufset(RTDEV_NVRAM, "WscModeOption", "0");
-		doSystem("kill -9 `cat /var/run/wscd.pid.rai0`");
-		doSystem("route delete 239.255.255.250 1>/dev/null 2>&1");
-	} else {
+	{
 		const char *wordlist= nvram_bufget(RTDEV_NVRAM, "WscModeOption");
 		if(wordlist){
 			if (strcmp(wordlist, "0"))
@@ -692,35 +659,37 @@ static void inicBasic(webs_t wp, char_t *path, char_t *query)
 			g_Raix_wsc_configured = 1;
 		}
 	}
+
 //#WPS
 
+	i = 2;
 	if (0 != strlen(mssid_1)) {
-		i++;
 		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), mssid_1);
+		i++;
 	}
 	if (0 != strlen(mssid_2)) {
-		i++;
 		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), mssid_2);
+		i++;
 	}
 	if (0 != strlen(mssid_3)) {
-		i++;
 		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), mssid_3);
+		i++;
 	}
 	if (0 != strlen(mssid_4)) {
-		i++;
 		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), mssid_4);
+		i++;
 	}
 	if (0 != strlen(mssid_5)) {
-		i++;
 		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), mssid_5);
+		i++;
 	}
 	if (0 != strlen(mssid_6)) {
-		i++;
 		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), mssid_6);
+		i++;
 	}
 	if (0 != strlen(mssid_7)) {
-		i++;
 		nvram_bufset(RTDEV_NVRAM, racat("SSID", i), mssid_7);
+		i++;
 	}
 
 	nvram_bufset(RTDEV_NVRAM, "BssidNum", bssid_num);
@@ -867,12 +836,9 @@ static void inicBasic(webs_t wp, char_t *path, char_t *query)
 		nvram_bufset(RTDEV_NVRAM, "HT_MCS", n_mcs);
 		nvram_bufset(RTDEV_NVRAM, "HT_RDG", n_rdg);
 		nvram_bufset(RTDEV_NVRAM, "HT_EXTCHA", n_extcha);
-		nvram_bufset(RTDEV_NVRAM, "HT_STBC", n_stbc);
 		nvram_bufset(RTDEV_NVRAM, "HT_AMSDU", n_amsdu);
 		nvram_bufset(RTDEV_NVRAM, "HT_AutoBA", n_autoba);
 		nvram_bufset(RTDEV_NVRAM, "HT_BADecline", n_badecline);
-		nvram_bufset(RTDEV_NVRAM, "HT_DisallowTKIP", n_disallow_tkip);
-		nvram_bufset(RTDEV_NVRAM, "HT_BSSCoexistence", n_2040_coexit);
 	}
 	nvram_bufset(RTDEV_NVRAM, "HT_TxStream", tx_stream);
 	nvram_bufset(RTDEV_NVRAM, "HT_RxStream", rx_stream);
@@ -902,12 +868,9 @@ static void inicBasic(webs_t wp, char_t *path, char_t *query)
 		websWrite(wp, T("n_mcs: %s<br>\n"), n_mcs);
 		websWrite(wp, T("n_rdg: %s<br>\n"), n_rdg);
 		websWrite(wp, T("n_extcha: %s<br>\n"), n_extcha);
-		websWrite(wp, T("n_stbc: %s<br>\n"), n_stbc);
 		websWrite(wp, T("n_amsdu: %s<br>\n"), n_amsdu);
 		websWrite(wp, T("n_autoba: %s<br>\n"), n_autoba);
 		websWrite(wp, T("n_badecline: %s<br>\n"), n_badecline);
-		websWrite(wp, T("n_disallow_tkip: %s<br>\n"), n_disallow_tkip);
-		websWrite(wp, T("n_2040_coexit: %s<br>\n"), n_2040_coexit);
 	}
 	websWrite(wp, T("tx_stream: %s<br>\n"), tx_stream);
 	websWrite(wp, T("rx_stream: %s<br>\n"), rx_stream);
@@ -919,9 +882,8 @@ static void inicBasic(webs_t wp, char_t *path, char_t *query)
 static void inicAdvanced(webs_t wp, char_t *path, char_t *query)
 {
 	char_t	*bg_protection, *basic_rate, *beacon, *dtim, *fragment, *rts,
-			*tx_power, *short_preamble, *short_slot, *tx_burst, *pkt_aggregate;
-	char_t	*ieee_80211h, *rd_region, *carrier_detect;
-	char_t *wmm_capable, *apsd_capable, *dls_capable, *countrycode;
+			*tx_power, *short_preamble, *short_slot, *tx_burst, *pkt_aggregate,
+			*ieee_80211h, *rd_region, *wmm_capable, *apsd_capable, *dls_capable, *countrycode;
 	int		i, ssid_num, wlan_mode;
 	char	wmm_enable[8];
 #ifdef CONFIG_RT3090_AUTO_PROVISION
@@ -945,7 +907,6 @@ static void inicAdvanced(webs_t wp, char_t *path, char_t *query)
 #endif
 	ieee_80211h = websGetVar(wp, T("ieee_80211h"), T("0"));
 	rd_region = websGetVar(wp, T("rd_region"), T(""));
-	carrier_detect = websGetVar(wp, T("carrier_detect"), T("0"));
 	wmm_capable = websGetVar(wp, T("wmm_capable"), T("0"));
 	apsd_capable = websGetVar(wp, T("apsd_capable"), T("0"));
 	dls_capable = websGetVar(wp, T("dls_capable"), T("0"));
@@ -974,7 +935,6 @@ static void inicAdvanced(webs_t wp, char_t *path, char_t *query)
 #endif
 	nvram_bufset(RTDEV_NVRAM, "IEEE80211H", ieee_80211h);
 	nvram_bufset(RTDEV_NVRAM, "RDRegion", rd_region);
-	nvram_bufset(RTDEV_NVRAM, "CarrierDetect", carrier_detect);
 	nvram_bufset(RTDEV_NVRAM, "WmmCapable", wmm_capable);
 	nvram_bufset(RTDEV_NVRAM, "APSDCapable", apsd_capable);
 	nvram_bufset(RTDEV_NVRAM, "DLSCapable", dls_capable);
@@ -1044,7 +1004,6 @@ static void inicAdvanced(webs_t wp, char_t *path, char_t *query)
 #endif
     websWrite(wp, T("ieee_80211h: %s<br>\n"), ieee_80211h);
 	websWrite(wp, T("rd_region: %s<br>\n"), rd_region);
-	websWrite(wp, T("carrier_detect: %s<br>\n"), carrier_detect);
     websWrite(wp, T("wmm_capable: %s<br>\n"), wmm_capable);
     websWrite(wp, T("apsd_capable: %s<br>\n"), apsd_capable);
     websWrite(wp, T("dls_capable: %s<br>\n"), dls_capable);
@@ -1312,8 +1271,6 @@ static int getRaixApStats(int eid, webs_t wp, int argc, char_t **argv)
 	char_t *t;
 	NDIS_802_11_STATISTICS stat;
 	int s, ret;
-	float txCount;
-	char  tmpStatistics[256];
 
 	if (ejArgs(argc, argv, T("%s"), &t) < 1) {
 		return websWrite(wp, T("Insufficient args"));
@@ -1323,22 +1280,12 @@ static int getRaixApStats(int eid, webs_t wp, int argc, char_t **argv)
 	ret = ApOidQueryInformation(OID_802_11_STATISTICS, s, "rai0", &stat, sizeof(stat));
 	close(s);
 	if (ret >= 0) {
-		txCount = stat.TransmittedFragmentCount.QuadPart;
-
 		if (!strncmp(t, "TxSucc", 7))
 			return websWrite(wp, T("%ld"), stat.TransmittedFragmentCount.QuadPart);
 		else if (!strncmp(t, "TxRetry", 8))
-		{
-			sprintf(tmpStatistics, "%lld,  PER=%0.1f%%", stat.RetryCount.QuadPart,
-				txCount==0? 0.0: 100.0f*(stat.RetryCount.QuadPart+stat.FailedCount.QuadPart)/(stat.RetryCount.QuadPart+stat.FailedCount.QuadPart+txCount));
-			return websWrite(wp, T("%s"), tmpStatistics);
-		}
+			return websWrite(wp, T("%ld"), stat.RetryCount.QuadPart);
 		else if (!strncmp(t, "TxFail", 7))
-		{
-			sprintf(tmpStatistics, "%lld,  PLR=%0.1e", stat.FailedCount.QuadPart,
-			txCount==0? 0.0: (float)stat.FailedCount.QuadPart/(stat.FailedCount.QuadPart+txCount));
-			return websWrite(wp, T("%s"), tmpStatistics);
-		}
+			return websWrite(wp, T("%ld"), stat.FailedCount.QuadPart);
 		else if (!strncmp(t, "RTSSucc", 8))
 			return websWrite(wp, T("%ld"), stat.RTSSuccessCount.QuadPart);
 		else if (!strncmp(t, "RTSFail", 8))
@@ -1346,12 +1293,7 @@ static int getRaixApStats(int eid, webs_t wp, int argc, char_t **argv)
 		else if (!strncmp(t, "RxSucc", 7))
 			return websWrite(wp, T("%ld"), stat.ReceivedFragmentCount.QuadPart);
 		else if (!strncmp(t, "FCSError", 9))
-		{
-			sprintf(tmpStatistics, "%lld, PER=%0.1f%%", stat.FCSErrorCount.QuadPart,
-					stat.ReceivedFragmentCount.QuadPart==0?
-						0.0: 100.0f*stat.FCSErrorCount.QuadPart/(stat.FCSErrorCount.QuadPart+stat.ReceivedFragmentCount.QuadPart));
-			return websWrite(wp, T("%s"), tmpStatistics);
-		}
+			return websWrite(wp, T("%ld"), stat.FCSErrorCount.QuadPart);
 		else
 			return websWrite(wp, T("type not supported"));
 	}
@@ -1403,7 +1345,7 @@ static void inicRvt(webs_t wp, char_t *path, char_t *query)
 	if (!strncmp(classifier, "0", 2))
 		doSystem("rmmod cls");
 	else
-		doSystem("insmod -q cls");
+		doSystem("insmod cls");
 	initInternet();
 
 	//debug print
@@ -1430,18 +1372,18 @@ static void INICDeleteAccessPolicyList(webs_t wp, char_t *path, char_t *query)
 	DeleteAccessPolicyList(RTDEV_NVRAM, wp, path, query);
 }
 
-static int getRaixABand(int eid, webs_t wp, int argc, char_t **argv)
+static int getSupportABand(int eid, webs_t wp, int argc, char_t **argv)
 {
-#if defined (RTDEV_ABAND_SUPPORT)
+#if defined CONFIG_RT3572_AP || defined CONFIG_RT3572_AP_MODULE || defined CONFIG_RT5572_AP || defined CONFIG_RT5572_AP_MODULE
 	return websWrite(wp, T("1"));
 #else
 	return websWrite(wp, T("0"));
 #endif
 }
- 
+
 static int getRaixDLSBuilt(int eid, webs_t wp, int argc, char_t **argv)
 {
-#if defined (RTDEV_DLS_SUPPORT)
+#if defined CONFIG_RT3090_AP_DLS ||defined CONFIG_RT3572_AP_DLS || defined CONFIG_RT5392_AP_DLS
 	return websWrite(wp, T("1"));
 #else
 	return websWrite(wp, T("0"));
@@ -1450,7 +1392,7 @@ static int getRaixDLSBuilt(int eid, webs_t wp, int argc, char_t **argv)
 
 static int getRaixAutoProvisionBuilt(int eid, webs_t wp, int argc, char_t **argv)
 {
-#if defined (CONFIG_RT3090_AUTO_PROVISION)
+#ifdef CONFIG_RT3090_AUTO_PROVISION
 	return websWrite(wp, T("1"));
 #else
 	return websWrite(wp, T("0"));
@@ -1459,7 +1401,7 @@ static int getRaixAutoProvisionBuilt(int eid, webs_t wp, int argc, char_t **argv
 
 static int getRaixWDSBuilt(int eid, webs_t wp, int argc, char_t **argv)
 {
-#if defined (RTDEV_WDS_SUPPORT)
+#if defined CONFIG_RT3090_AP_WDS || defined CONFIG_RT3572_AP_WDS || defined CONFIG_RT5392_AP_WDS
 	return websWrite(wp, T("1"));
 #else
 	return websWrite(wp, T("0"));
@@ -1468,9 +1410,10 @@ static int getRaixWDSBuilt(int eid, webs_t wp, int argc, char_t **argv)
 
 static int getRaixRVTBuilt(int eid, webs_t wp, int argc, char_t **argv)
 {
-#if defined (CONFIG_RA_CLASSIFIER_MODULE) && \
-    (defined (CONFIG_RT3090_AP_VIDEO_TURBINE) || defined (CONFIG_RT3592_AP_VIDEO_TURBINE) || \
-	defined (CONFIG_RT5392_AP_VIDEO_TURBINE))
+#if defined CONFIG_RA_CLASSIFIER_MODULE && \
+   (defined CONFIG_RT3090_AP_VIDEO_TURBINE || \
+	defined CONFIG_RT3592_AP_VIDEO_TURBINE || \
+	defined CONFIG_RT5392_AP_VIDEO_TURBINE)
 	return websWrite(wp, T("1"));
 #else
 	return websWrite(wp, T("0"));
@@ -1479,53 +1422,7 @@ static int getRaixRVTBuilt(int eid, webs_t wp, int argc, char_t **argv)
 
 static int getRaixDFSBuilt(int eid, webs_t wp, int argc, char_t **argv)
 {
-#if defined (RTDEV_DFS_SUPPORT)
-	return websWrite(wp, T("1"));
-#else
-	return websWrite(wp, T("0"));
-#endif
-}
-
-static int getRaixCarrierBuilt(int eid, webs_t wp, int argc, char_t **argv)
-{
-#if defined (RTDEV_CARRIER_SUPPORT)
-	return websWrite(wp, T("1"));
-#else
-	return websWrite(wp, T("0"));
-#endif
-}
-
-static int getRaixWSCBuilt(int eid, webs_t wp, int argc, char_t **argv)
-{
-#if defined (RTDEV_WSC_SUPPORT)
-	return websWrite(wp, T("1"));
-#else
-	return websWrite(wp, T("0"));
-#endif
-}
-
-static int getRaixHTStream(int eid, webs_t wp, int argc, char_t **argv)
-{
-#if defined (RTDEV_3T3R_SUPPORT)
-		websWrite(wp, T("3"));
-#else
-		websWrite(wp, T("2"));	
-#endif
-	return 0;
-}
-
-static int getRaix11nDraft3Built(int eid, webs_t wp, int argc, char_t **argv)
-{
-#if defined (RTDEV_11NDRAFT3_SUPPORT)
-	return websWrite(wp, T("1"));
-#else
-	return websWrite(wp, T("0"));
-#endif
-}
-
-static int getRaixWAPIBuilt(int eid, webs_t wp, int argc, char_t **argv)
-{
-#if defined (RTDEV_WAPI_SUPPORT)
+#ifdef CONFIG_RT3572_AP_DFS
 	return websWrite(wp, T("1"));
 #else
 	return websWrite(wp, T("0"));

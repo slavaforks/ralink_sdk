@@ -10,6 +10,14 @@ endif
 ifeq ($(CONFIG_ETHTOOL),y)
 ifeq ($(CONFIG_RAETH_ROUTER),y)
 raeth-objs += ra_ethtool.o
+else
+ifeq ($(CONFIG_RT_3052_ESW),y)
+raeth-objs += ra_ethtool.o
+else
+ifeq ($(CONFIG_RALINK_RT3883),y)
+raeth-objs += ra_ethtool.o
+endif
+endif
 endif
 endif
 
@@ -23,10 +31,6 @@ endif
 
 ifeq ($(CONFIG_RAETH_NAPI),y)
 EXTRA_CFLAGS   += -DCONFIG_RAETH_NAPI 
-endif
-
-ifeq ($(CONFIG_RAETH_SKB_RECYCLE),y)
-EXTRA_CFLAGS   += -DCONFIG_RAETH_SKB_RECYCLE
 endif
 
 ifeq ($(CONFIG_RALINK_BRIDGING_ONLY),y)
@@ -51,8 +55,4 @@ endif
 
 ifeq ($(CONFIG_RA_NETWORK_WORKQUEUE_BH),y)
 EXTRA_CFLAGS   += -DWORKQUEUE_BH
-endif
-
-ifeq ($(CONFIG_RAETH_TSO),y)
-EXTRA_CFLAGS   += -DCONFIG_RAETH_HW_VLAN_TX
 endif

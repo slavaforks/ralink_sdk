@@ -355,13 +355,8 @@ void i2c_read_config(char *data, unsigned int len)
 	i2c_eeprom_read(0, data, len);
 }
 
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
-int i2cdrv_ioctl(struct file *filp, unsigned int cmd, 
-		unsigned long arg)
-#else
 int i2cdrv_ioctl(struct inode *inode, struct file *filp, \
                      unsigned int cmd, unsigned long arg)
-#endif
 {
 	//unsigned char w_byte[4];
 	unsigned int address, size;
@@ -412,19 +407,11 @@ int i2cdrv_ioctl(struct inode *inode, struct file *filp, \
 }
 
 struct file_operations i2cdrv_fops = {
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
-	unlocked_ioctl: i2cdrv_ioctl,
-#else
-	ioctl:  i2cdrv_ioctl,
-#endif
+	ioctl:	i2cdrv_ioctl,
 };
 
 static int i2cdrv_init(void)
 {
-#if !defined (CONFIG_DEVFS_FS)
-	int result=0;
-#endif
-
 	/* configure i2c to normal mode */
 	RT2880_REG(RALINK_SYSCTL_BASE + 0x60) &= ~1;
 
@@ -437,6 +424,7 @@ static int i2cdrv_init(void)
 	devfs_handle = devfs_register(NULL, I2C_DEV_NAME, DEVFS_FL_DEFAULT, i2cdrv_major, 0, \
 			S_IFCHR | S_IRUGO | S_IWUGO, &i2cdrv_fops, NULL);
 #else
+	int result=0;
 	result = register_chrdev(i2cdrv_major, I2C_DEV_NAME, &i2cdrv_fops);
 	if (result < 0) {
 		printk(KERN_WARNING "i2c_drv: can't get major %d\n",i2cdrv_major);

@@ -10,7 +10,6 @@ $(EXEC): $(OBJS)
 
 romfs:
 	$(ROMFSINST) /bin/$(EXEC)
-	$(ROMFSINST) -e CONFIG_RALINK_RT6855A /sbin/eth_mac.sh
 
 clean:
 	-rm -f $(EXEC) *.elf *.gdb *.o

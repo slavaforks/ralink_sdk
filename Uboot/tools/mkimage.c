@@ -613,9 +613,9 @@ NXTARG:		;
 	    hdr->ih_dram.dram_magic=0;
 	} else {
 #if defined(RT5350_ASIC_BOARD) || defined(RT5350_FPGA_BOARD)
-	    hdr->ih_dram.u.dram_magic_h=0x5;
+		hdr->ih_dram.u.dram_magic_h=0x5;
 #elif defined(RT3352_ASIC_BOARD) || defined(RT3352_FPGA_BOARD)
-	    hdr->ih_dram.dram_magic=0x5A;
+		hdr->ih_dram.dram_magic=0x5A;
 #endif
 	}
 

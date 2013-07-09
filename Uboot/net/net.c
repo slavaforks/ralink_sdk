@@ -185,6 +185,7 @@ ulong		NetArpWaitTimerStart;
 int		NetArpWaitTry;
 
 
+
 //===================================================
 /*=======================================*/
 
@@ -1186,6 +1187,7 @@ NetReceive(volatile uchar * inpkt, int len)
 	NetRxPkt = inpkt;
 	NetRxPktLen = len;
 	et = (Ethernet_t *)inpkt;
+
 
 	/* too small packet? */
 	if (len < ETHER_HDR_SIZE)

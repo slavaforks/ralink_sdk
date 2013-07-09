@@ -29,9 +29,9 @@
 
 #define U_BOOT_VERSION	"U-Boot 1.1.3"
 
-#if defined (RT2880_ASIC_BOARD) || defined (RT2883_ASIC_BOARD) || defined (RT3052_ASIC_BOARD) || defined (RT3352_ASIC_BOARD) || defined (RT3883_ASIC_BOARD) || defined (RT5350_ASIC_BOARD) || defined (RT6855_ASIC_BOARD) || defined (RT6855A_ASIC_BOARD) || defined (RT6352_ASIC_BOARD) || defined (RT71100_ASIC_BOARD)
+#if defined (RT2880_ASIC_BOARD) || defined (RT2883_ASIC_BOARD) || defined (RT3052_ASIC_BOARD) || defined (RT3352_ASIC_BOARD) || defined (RT3883_ASIC_BOARD) || defined (RT5350_ASIC_BOARD)
 #define CHIP_TYPE	"ASIC"
-#elif defined (RT2880_FPGA_BOARD) || defined (RT2883_FPGA_BOARD) || defined (RT3052_FPGA_BOARD) || defined (RT3352_FPGA_BOARD) || defined (RT3883_FPGA_BOARD) || defined (RT5350_FPGA_BOARD) || defined (RT6855_FPGA_BOARD) || defined (RT6855A_FPGA_BOARD) || defined (RT6352_FPGA_BOARD) || defined (RT71100_FPGA_BOARD)
+#elif defined (RT2880_FPGA_BOARD) || defined (RT2883_FPGA_BOARD) || defined (RT3052_FPGA_BOARD) || defined (RT3352_FPGA_BOARD) || defined (RT3883_FPGA_BOARD) || defined (RT5350_FPGA_BOARD)
 #define CHIP_TYPE	"FPGA"
 #else
 #error "PLATFORM_TYPE not defined in config.mk"
@@ -51,14 +51,6 @@
 #define CHIP_VERSION	"3883_MP"
 #elif defined (RT5350_MP)
 #define CHIP_VERSION	"5350_MP"
-#elif defined (RT6855_MP)
-#define CHIP_VERSION	"6855_MP"
-#elif defined (RT6855A_MP)
-#define CHIP_VERSION	"6855A_MP"
-#elif defined (RT6352_MP)
-#define CHIP_VERSION	"6352_MP"
-#elif defined (RT71100_MP)
-#define CHIP_VERSION	"71100_MP"
 #else
 #error "CHIP_VER not defined in config.mk"
 #endif
@@ -76,9 +68,7 @@
 #elif defined (MAC_TO_VITESSE_MODE)
 #define GMAC_MODE	"(MAC to VITESSE Mode)"
 #elif defined (RT3052_ASIC_BOARD) || defined (RT3052_FPGA_BOARD) || defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || \
-      defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD) || defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
-      defined (RT6352_ASIC_BOARD) || defined (RT6352_FPGA_BOARD) || defined (RT71100_ASIC_BOARD) || defined (RT71100_FPGA_BOARD) || \
-      defined (RT6855A_ASIC_BOARD) || defined (RT6855A_FPGA_BOARD)
+      defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)
 
 #if defined (P5_MAC_TO_NONE_MODE)
 #define GMAC_MODE  "(Port5<->None)"
@@ -96,9 +86,8 @@
 #error	"GMAC_MODE not defined"
 #endif
 
-#if defined (ON_BOARD_16M_DRAM_COMPONENT)
-#define DRAM_COMPONENT  16 
-#elif defined (ON_BOARD_64M_DRAM_COMPONENT)
+
+#if defined (ON_BOARD_64M_DRAM_COMPONENT)
 #define DRAM_COMPONENT	64
 #elif defined (ON_BOARD_128M_DRAM_COMPONENT)
 #define DRAM_COMPONENT	128
@@ -108,8 +97,6 @@
 #define DRAM_COMPONENT	512
 #elif defined (ON_BOARD_1024M_DRAM_COMPONENT)
 #define DRAM_COMPONENT	1024
-#elif defined (ON_BOARD_2048M_DRAM_COMPONENT)
-#define DRAM_COMPONENT  2048
 #elif defined (RT3883_FPGA_BOARD) || defined (RT3883_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || defined (RT3352_ASIC_BOARD)
 #define DRAM_COMPONENT	({ int _x = ((RALINK_REG(RT2880_SYSCFG_REG) >> 12) & 0x7); \
 		(_x == 6)? 2048 : (_x == 5)? 1024 : (_x == 4)? 512 : \
@@ -125,7 +112,7 @@
 #define DRAM_BUS	16
 #elif defined (ON_BOARD_32BIT_DRAM_BUS)
 #define DRAM_BUS	32
-#elif defined (RT3883_FPGA_BOARD) || defined (RT3883_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || defined (RT3352_ASIC_BOARD) 
+#elif defined (RT3883_FPGA_BOARD) || defined (RT3883_ASIC_BOARD) || defined (RT3352_FPGA_BOARD) || defined (RT3352_ASIC_BOARD)
 #define DRAM_BUS	({ ((RALINK_REG(RT2880_SYSCFG_REG) >> 15) & 0x1)? 32 : 16; })
 #elif defined (CFG_ENV_IS_IN_SPI)
 #define DRAM_BUS	({ ((RALINK_REG(RT2880_SYSCFG_REG) >> 28) & 0x1)? 32 : 16; })
@@ -133,7 +120,7 @@
 #error "DRAM BUS not defined"
 #endif
 
-#if defined (CFG_ENV_IS_IN_SPI) && !defined (RT3883_FPGA_BOARD) && !defined (RT3883_FPGA_BOARD) && !defined (RT6855A_FPGA_BOARD) && !defined (RT6855A_ASIC_BOARD)
+#if defined (CFG_ENV_IS_IN_SPI) && !defined (RT3883_FPGA_BOARD) && !defined (RT3883_FPGA_BOARD)
 #if defined (RT3352_FPGA_BOARD) || defined (RT3352_ASIC_BOARD)
 #define DDR_INFO	({ ((RALINK_REG(RT2880_SYSCFG_REG) >> 17) & 0x1)? \
 		(((RALINK_REG(RT2880_SYSCFG_REG) >> 10) & 0x1)? "DDR, width 16" : "DDR, width 8") : \
@@ -142,7 +129,7 @@
 #define DDR_INFO	"SDR"
 #endif
 #else
-#if defined (ON_BOARD_DDR2) || defined(ON_BOARD_DDR1)
+#ifdef ON_BOARD_DDR 
   #ifdef ON_BOARD_DDR_WIDTH_8 
   #define DDR_INFO "DDR, width 8"
   #else

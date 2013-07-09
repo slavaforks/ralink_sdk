@@ -18,15 +18,11 @@
 
 #define phys_to_bus(a) (a & 0x1FFFFFFF)
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,36)
 #define BIT(x)	((1 << x))
-#endif
 #define ETHER_ADDR_LEN  6
 
 /*  Phy Vender ID list */
 
-#define EV_ICPLUS_PHY_ID0 0x0243  
-#define EV_ICPLUS_PHY_ID1 0x0D90  
 #define EV_MARVELL_PHY_ID0 0x0141  
 #define EV_MARVELL_PHY_ID1 0x0CC2  
 #define EV_VTSS_PHY_ID0 0x0007
@@ -35,8 +31,7 @@
 /*
      FE_INT_STATUS
 */
-#if defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT6855) || defined(CONFIG_RALINK_RT6855A) || \
-    defined (CONFIG_RALINK_RT6352) || defined (CONFIG_RALINK_RT71100) 
+#if defined (CONFIG_RALINK_RT5350)
 
 #define RX_COHERENT      BIT(31)
 #define RX_DLY_INT       BIT(30)
@@ -95,26 +90,7 @@
 #define UNSECURED_ALERT         BIT(27) //Intruder alert
 #define ABNORMAL_ALERT          BIT(28) //Abnormal
 
-#define ESW_ISR			(RALINK_ETH_SW_BASE + 0x00)
-#define ESW_IMR			(RALINK_ETH_SW_BASE + 0x04)
 #define ESW_INT_ALL		(PORT_ST_CHG)
-
-#elif defined (CONFIG_RALINK_RT6855) || defined(CONFIG_RALINK_RT6855A) || \
-      defined (CONFIG_RALINK_RT6352) || defined (CONFIG_RALINK_RT71100) 
-#define ACL_INT			BIT(15)
-#define P5_LINK_CH		BIT(5)
-#define P4_LINK_CH		BIT(4)
-#define P3_LINK_CH		BIT(3)
-#define P2_LINK_CH		BIT(2)
-#define P1_LINK_CH		BIT(1)
-#define P0_LINK_CH		BIT(0)
-
-#define ESW_IMR			(RALINK_ETH_SW_BASE + 0x7000 + 0x8)
-#define ESW_ISR			(RALINK_ETH_SW_BASE + 0x7000 + 0xC)
-#define ESW_INT_ALL		(P0_LINK_CH | P1_LINK_CH | P2_LINK_CH | P3_LINK_CH | P4_LINK_CH | P5_LINK_CH | ACL_INT)
-#define ESW_AISR		(RALINK_ETH_SW_BASE + 0x8)
-
-#define ESW_PHY_POLLING		(RALINK_ETH_SW_BASE + 0x7000)
 
 #endif // CONFIG_RALINK_RT3052 || CONFIG_RALINK_RT3352 || CONFIG_RALINK_RT5350 //
 
@@ -132,7 +108,7 @@ typedef struct _PSEUDO_ADAPTER {
     struct net_device *RaethDev;
     struct net_device *PseudoDev;
     struct net_device_stats stat;
-#if defined (CONFIG_ETHTOOL) && defined (CONFIG_RAETH_ROUTER)
+#if defined (CONFIG_ETHTOOL)
 	struct mii_if_info	mii_info;
 #endif
 
@@ -149,9 +125,7 @@ typedef struct _PSEUDO_ADAPTER {
 #define RAPSE_OFFSET		0x0040
 #define RAGDMA2_OFFSET		0x0060
 #define RACDMA_OFFSET		0x0080
-#if defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT6855) || defined(CONFIG_RALINK_RT6855A) || \
-    defined (CONFIG_RALINK_RT6352) || defined (CONFIG_RALINK_RT71100) 
-
+#if defined (CONFIG_RALINK_RT5350)
 #define RAPDMA_OFFSET		0x0800
 #define SDM_OFFSET		0x0C00
 #else
@@ -223,123 +197,12 @@ typedef struct _PSEUDO_ADAPTER {
 #define SDM_RBCNT		(RALINK_FRAME_ENGINE_BASE+SDM_OFFSET+0x10C) //Switch DMA rx byte count
 #define SDM_CS_ERR		(RALINK_FRAME_ENGINE_BASE+SDM_OFFSET+0x110) //Switch DMA rx checksum error count
 
-#elif defined (CONFIG_RALINK_RT6855) || defined(CONFIG_RALINK_RT6855A) || \
-      defined (CONFIG_RALINK_RT6352) || defined (CONFIG_RALINK_RT71100) 
-
-/* Old FE with New PDMA */
-#define PDMA_RELATED            0x0800
-/* 1. PDMA */
-#define TX_BASE_PTR0            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x000)
-#define TX_MAX_CNT0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x004)
-#define TX_CTX_IDX0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x008)
-#define TX_DTX_IDX0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x00C)
-
-#define TX_BASE_PTR1            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x010)
-#define TX_MAX_CNT1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x014)
-#define TX_CTX_IDX1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x018)
-#define TX_DTX_IDX1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x01C)
-
-#define TX_BASE_PTR2            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x020)
-#define TX_MAX_CNT2             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x024)
-#define TX_CTX_IDX2             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x028)
-#define TX_DTX_IDX2             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x02C)
-
-#define TX_BASE_PTR3            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x030)
-#define TX_MAX_CNT3             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x034)
-#define TX_CTX_IDX3             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x038)
-#define TX_DTX_IDX3             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x03C)
-
-#define RX_BASE_PTR0            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x100)
-#define RX_MAX_CNT0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x104)
-#define RX_CALC_IDX0            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x108)
-#define RX_DRX_IDX0             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x10C)
-
-#define RX_BASE_PTR1            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x110)
-#define RX_MAX_CNT1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x114)
-#define RX_CALC_IDX1            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x118)
-#define RX_DRX_IDX1             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x11C)
-
-#define PDMA_INFO               (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x200)
-#define PDMA_GLO_CFG            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x204)
-#define PDMA_RST_IDX            (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x208)
-#define PDMA_RST_CFG            (PDMA_RST_IDX)
-#define DLY_INT_CFG             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x20C)
-#define FREEQ_THRES             (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x210)
-#define INT_STATUS              (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x220)
-#define FE_INT_STATUS		(INT_STATUS)
-#define INT_MASK                (RALINK_FRAME_ENGINE_BASE + PDMA_RELATED+0x228)
-#define FE_INT_ENABLE		(INT_MASK)
-#define SCH_Q01_CFG		(RALINK_FRAME_ENGINE_BASE+RAPDMA_OFFSET+0x280)
-#define SCH_Q23_CFG		(RALINK_FRAME_ENGINE_BASE+RAPDMA_OFFSET+0x284)
-
-#define FE_GLO_CFG          RALINK_FRAME_ENGINE_BASE + 0x08
-#define FE_RST_GL           RALINK_FRAME_ENGINE_BASE + 0x0C
-#define FE_INT_STATUS2	    RALINK_FRAME_ENGINE_BASE + 0x10
-#define FE_INT_ENABLE2	    RALINK_FRAME_ENGINE_BASE + 0x14
-#define FC_DROP_STA         RALINK_FRAME_ENGINE_BASE + 0x18
-#define FOE_TS_T            RALINK_FRAME_ENGINE_BASE + 0x1C
-
-#if defined (CONFIG_PDMA_NEW)
-#define GDMA1_RELATED       0x0600
-#define GDMA1_FWD_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x00)
-#define GDMA1_SHPR_CFG      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x04)
-#define GDMA1_MAC_ADRL      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x08)
-#define GDMA1_MAC_ADRH      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x0C)
-#else
-#define GDMA1_RELATED       0x0020
-#define GDMA1_FWD_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x00)
-#define GDMA1_SCH_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x04)
-#define GDMA1_SHPR_CFG      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x08)
-#define GDMA1_MAC_ADRL      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x0C)
-#define GDMA1_MAC_ADRH      (RALINK_FRAME_ENGINE_BASE + GDMA1_RELATED + 0x10)
-
-#define GDMA2_RELATED       0x0060
-#define GDMA2_FWD_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA2_RELATED + 0x00)
-#define GDMA2_SCH_CFG       (RALINK_FRAME_ENGINE_BASE + GDMA2_RELATED + 0x04)
-#define GDMA2_SHPR_CFG      (RALINK_FRAME_ENGINE_BASE + GDMA2_RELATED + 0x08)
-#define GDMA2_MAC_ADRL      (RALINK_FRAME_ENGINE_BASE + GDMA2_RELATED + 0x0C)
-#define GDMA2_MAC_ADRH      (RALINK_FRAME_ENGINE_BASE + GDMA2_RELATED + 0x10)
-#endif
-
-#if defined (CONFIG_RALINK_RT6352)
-#define PSE_RELATED         0x0500
-#define PSE_FQFC_CFG        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x00)
-#define PSE_IQ_CFG          (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x04)
-#define PSE_QUE_STA         (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x08)
-#else
-#define PSE_RELATED         0x0040
-#define PSE_FQ_CFG          (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x00)
-#define CDMA_FC_CFG         (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x04)
-#define GDMA1_FC_CFG        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x08)
-#define GDMA2_FC_CFG        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x0C)
-#define CDMA_OQ_STA         (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x10)
-#define GDMA1_OQ_STA        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x14)
-#define GDMA2_OQ_STA        (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x18)
-#define PSE_IQ_STA          (RALINK_FRAME_ENGINE_BASE + PSE_RELATED + 0x1C)
-#endif
-
-
-#if defined (CONFIG_RALINK_RT6352)
-#define CDMA_RELATED        0x0400
-#define CDMA_CSG_CFG        (RALINK_FRAME_ENGINE_BASE + CDMA_RELATED + 0x00)
-#define SMACCR0		    (RALINK_ETH_SW_BASE + 0x3FE4)
-#define SMACCR1		    (RALINK_ETH_SW_BASE + 0x3FE8)
-#define CKGCR               (RALINK_ETH_SW_BASE + 0x3FF0)
-#else
-#define CDMA_RELATED        0x0080
-#define CDMA_CSG_CFG        (RALINK_FRAME_ENGINE_BASE + CDMA_RELATED + 0x00)
-#define CDMA_SCH_CFG        (RALINK_FRAME_ENGINE_BASE + CDMA_RELATED + 0x04)
-#define SMACCR0		    (RALINK_ETH_SW_BASE + 0x30E4)
-#define SMACCR1		    (RALINK_ETH_SW_BASE + 0x30E8)
-#define CKGCR               (RALINK_ETH_SW_BASE + 0x30F0)
-#endif
-
-#define PDMA_FC_CFG	    (RALINK_FRAME_ENGINE_BASE+0x100)
 #else
 
 /* 1. Frame Engine Global Registers */
 #define MDIO_ACCESS		(RALINK_FRAME_ENGINE_BASE+RAFRAMEENGINE_OFFSET+0x00)
 #define MDIO_CFG 		(RALINK_FRAME_ENGINE_BASE+RAFRAMEENGINE_OFFSET+0x04)
+#define MDIO_CFG2 		(RALINK_FRAME_ENGINE_BASE+RAFRAMEENGINE_OFFSET+0x18)
 #define FE_GLO_CFG		(RALINK_FRAME_ENGINE_BASE+RAFRAMEENGINE_OFFSET+0x08)
 #define FE_RST_GL		(RALINK_FRAME_ENGINE_BASE+RAFRAMEENGINE_OFFSET+0x0C)
 #define FE_INT_STATUS		(RALINK_FRAME_ENGINE_BASE+RAFRAMEENGINE_OFFSET+0x10)
@@ -522,7 +385,6 @@ typedef struct _PSEUDO_ADAPTER {
 #define PST_DTX_IDX1       BIT(1)
 #define PST_DTX_IDX0       BIT(0)
 
-#define RX_2B_OFFSET	  BIT(31)
 #define TX_WB_DDONE       BIT(6)
 #define RX_DMA_BUSY       BIT(3)
 #define TX_DMA_BUSY       BIT(1)
@@ -532,7 +394,6 @@ typedef struct _PSEUDO_ADAPTER {
 #define PDMA_BT_SIZE_4DWORDS     (0<<4)
 #define PDMA_BT_SIZE_8DWORDS     (1<<4)
 #define PDMA_BT_SIZE_16DWORDS    (2<<4)
-#define PDMA_BT_SIZE_32DWORDS    (3<<4)
 
 /* Register bits.
  */
@@ -630,18 +491,7 @@ typedef struct _PDMA_RXD_INFO4_    PDMA_RXD_INFO4_T;
 
 struct _PDMA_RXD_INFO4_
 {
-#if defined (CONFIG_PDMA_NEW)
-    unsigned int    FOE_Entry           : 14;
-    unsigned int    CRSN		: 5;
-    unsigned int    SPORT		: 3;
-    unsigned int    L4F			: 1;
-    unsigned int    L4VLD		: 1;
-    unsigned int    TACK		: 1;
-    unsigned int    IP4F		: 1;
-    unsigned int    IP4			: 1;
-    unsigned int    IP6			: 1;
-    unsigned int    UN_USE1		: 4;
-#else
+
     unsigned int    FOE_Entry           : 14;
     unsigned int    FVLD                : 1;
     unsigned int    UN_USE1             : 1;
@@ -652,7 +502,6 @@ struct _PDMA_RXD_INFO4_
     unsigned int    IPF                  : 1;
     unsigned int    L4FVLD_bit           : 1;
     unsigned int    IPFVLD_bit           : 1;
-#endif
 };
 
 
@@ -703,27 +552,16 @@ struct _PDMA_TXD_INFO4_
     unsigned int    INSV                : 1;
     unsigned int    SIDX                : 4;
     unsigned int    INSP                : 1;
-#if defined (CONFIG_PDMA_NEW)
-    unsigned int    RESV            	: 2;
-    unsigned int    UDF            	: 5;
-    unsigned int    FP_BMAP            	: 8;
-    unsigned int    TSO			: 1;
-    unsigned int    TCO                 : 1;
-    unsigned int    UCO			: 1;
-    unsigned int    ICO		        : 1;
-#else
     unsigned int    RESV            	: 1;
     unsigned int    UN_USE3             : 2;
     unsigned int    QN                  : 3;
     unsigned int    UN_USE2             : 1;
     unsigned int    UDF			: 4;
     unsigned int    PN                  : 3;
-    unsigned int    UN_USE1             : 1;
-    unsigned int    TSO			: 1;
+    unsigned int    UN_USE1             : 2;
     unsigned int    TCO                 : 1;
     unsigned int    UCO			: 1;
     unsigned int    ICO		        : 1;
-#endif
 };
 
 
@@ -751,13 +589,10 @@ struct PDMA_txdesc {
 
 /* proc definition */
 
-#if !defined (CONFIG_RALINK_RT6855) && !defined(CONFIG_RALINK_RT6855A) && \
-    !defined (CONFIG_RALINK_RT6352) && !defined (CONFIG_RALINK_RT71100) 
 #define CDMA_OQ_STA	(RALINK_FRAME_ENGINE_BASE+RAPSE_OFFSET+0x4c)
 #define GDMA1_OQ_STA	(RALINK_FRAME_ENGINE_BASE+RAPSE_OFFSET+0x50)
 #define PPE_OQ_STA	(RALINK_FRAME_ENGINE_BASE+RAPSE_OFFSET+0x54)
 #define PSE_IQ_STA	(RALINK_FRAME_ENGINE_BASE+RAPSE_OFFSET+0x58)
-#endif
 
 #define PROCREG_CONTROL_FILE      "/var/run/procreg_control"
 #if defined (CONFIG_RALINK_RT2880)
@@ -772,20 +607,9 @@ struct PDMA_txdesc {
 #define PROCREG_DIR             "rt2883"
 #elif defined (CONFIG_RALINK_RT3883)
 #define PROCREG_DIR             "rt3883"
-#elif defined (CONFIG_RALINK_RT6855)
-#define PROCREG_DIR             "rt6855"
-#elif defined (CONFIG_RALINK_RT6352)
-#define PROCREG_DIR             "rt6352"
-#elif defined (CONFIG_RALINK_RT71100)
-#define PROCREG_DIR             "rt71100"
-#elif defined (CONFIG_RALINK_RT6855A)
-#define PROCREG_DIR             "rt6855A"
 #else
 #define PROCREG_DIR             "rt2880"
 #endif
-#define PROCREG_SKBFREE		"skb_free"
-#define PROCREG_TXRING		"tx_ring"
-#define PROCREG_RXRING		"rx_ring"
 #define PROCREG_GMAC		"gmac"
 #define PROCREG_CP0		"cp0"
 #define PROCREG_RAQOS		"qos"
@@ -795,7 +619,6 @@ struct PDMA_txdesc {
 #define PROCREG_CTL		"procreg_control"
 #define PROCREG_RXDONE_INTR	"rxdone_intr_count"
 #define PROCREG_ESW_INTR	"esw_intr_count"
-#define PROCREG_ESW_CNT		"esw_cnt"
 #define PROCREG_SNMP		"snmp"
 
 struct rt2880_reg_op_data {
@@ -805,8 +628,18 @@ struct rt2880_reg_op_data {
   unsigned int reg_value;
 };        
 
+typedef struct MACInfo_s
+{
+        int ivec;       /* interrupt vector */
+        unsigned char   macaddr[6];
+} MAC_INFO;
+
 typedef struct end_device
 {
+    unsigned int        ppeEbl;
+    int                 enetUnit;       /* enet unit number */
+    int                 isLAN;          /* 0-->WAN; 1-->LAN */
+    int                 isRequestedUp;  /* desired state of UP & RUNNING */
 
     unsigned int        tx_cpu_owner_idx0;
     unsigned int        rx_cpu_owner_idx0;
@@ -821,15 +654,11 @@ typedef struct end_device
 
     unsigned int	phy_rx_ring0, phy_rx_ring1;
 
-#if defined (CONFIG_RALINK_RT3052) || defined (CONFIG_RALINK_RT3352) || \
-    defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT6855) || \
-    defined(CONFIG_RALINK_RT6855A) || defined (CONFIG_RALINK_RT6352) || \
-    defined(CONFIG_RALINK_RT71100)
+#if defined (CONFIG_RALINK_RT3052) || defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350)
     //send signal to user application to notify link status changed
     struct work_struct  kill_sig_wq;
 #endif
 
-    struct work_struct  reset_task;
 #ifdef WORKQUEUE_BH
     struct work_struct  rx_wq;
     struct work_struct  tx_wq;
@@ -846,6 +675,7 @@ typedef struct end_device
     unsigned int	free_idx;
 #endif
 
+    struct              MACInfo_s          *MACInfo;
     struct              net_device_stats stat;  /* The new statistics table. */
     spinlock_t          page_lock;              /* Page register locks */
     struct PDMA_txdesc *tx_ring0;
@@ -861,25 +691,18 @@ typedef struct end_device
     struct sk_buff     *netrx1_skbuf[NUM_RX_DESC];
 #endif
 
-#ifdef CONFIG_RAETH_SKB_RECYCLE
-    struct sk_buff_head rx0_recycle;
-#endif
-
 #ifdef CONFIG_RAETH_NAPI
     atomic_t irq_sem;
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
-    struct napi_struct napi;
-#endif
 #endif
 #ifdef CONFIG_PSEUDO_SUPPORT
     struct net_device *PseudoDev;
     unsigned int isPseudo;
 #endif
-#if defined (CONFIG_ETHTOOL) && defined (CONFIG_RAETH_ROUTER)
+#if defined (CONFIG_ETHTOOL)
 	struct mii_if_info	mii_info;
 #endif
 } END_DEVICE, *pEND_DEVICE;
 
-#define RAETH_VERSION	"v2.1"
+#define RAETH_VERSION	"v2.0"
 
 #endif

@@ -83,7 +83,6 @@ int         upStreamVif;
 int main( int ArgCn, const char *ArgVc[] ) {
 
     int debugMode = 0;
-    int snooping = 1;
 
     // Set the default config Filepath...
     char* configFilePath = IGMPPROXY_CONFIG_FILEPATH;
@@ -123,15 +122,6 @@ int main( int ArgCn, const char *ArgVc[] ) {
                     log(LOG_ERR, 0, "Missing config file path after -c option.");
                 }
                 break;
-
-            case 'f':
-		if (i + 1 < ArgCn && ArgVc[i+1][0] != '-') {
-			snooping = atoi(ArgVc[i+1]);
-			i++;
-		} else{
-                    log(LOG_ERR, 0, "Missing config file path after -f option.");
-		}
-                break;
             }
         }
         i++;
@@ -162,7 +152,7 @@ int main( int ArgCn, const char *ArgVc[] ) {
         }
     
 #ifdef RT3052_SUPPORT
-	rt3052_init(snooping);		/* enable snooping */
+		rt3052_init();
 #endif
         // If not in debug mode, fork and detatch from terminal.
         if ( ! debugMode ) {
@@ -209,6 +199,7 @@ int igmpProxyInit() {
     struct sigaction sa;
     int Err;
 
+
     sa.sa_handler = signalHandler;
     sa.sa_flags = 0;    /* Interrupt system calls */
     sigemptyset(&sa.sa_mask);
@@ -251,7 +242,8 @@ int sigUSR1Handler(int signo);
                     if(upStreamVif == -1) {
                         upStreamVif = Ix;
                     } else {
-                        log(LOG_ERR, 0, "Vif #%d was already upstream. Cannot set VIF #%d as upstream as well.", upStreamVif, Ix);
+                        log(LOG_ERR, 0, "Vif #%d was already upstream. Cannot set VIF #%d as upstream as well.",
+                            upStreamVif, Ix);
                     }
                 }
 
@@ -262,8 +254,7 @@ int sigUSR1Handler(int signo);
 
         // If there is only one VIF, or no defined upstream VIF, we send an error.
         if(vifcount < 2 || upStreamVif < 0) {
-//          log(LOG_ERR, 0, "There must be at least 2 Vif's where one is upstream.");
-          log(LOG_WARNING, 0, "Warning, No upstream interface assigned.");
+            log(LOG_ERR, 0, "There must be at least 2 Vif's where one is upstream.");
         }
     }  
     

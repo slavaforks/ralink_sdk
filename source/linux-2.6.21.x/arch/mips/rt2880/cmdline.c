@@ -72,9 +72,7 @@ char * __init prom_getcmdline(void)
 void  __init prom_init_cmdline(void)
 {
 	char *cp;
-#ifdef CONFIG_UBOOT_CMDLINE
 	int actr=1; /* Always ignore argv[0] */
-#endif
 
 	cp = &(arcs_cmdline[0]);
 
@@ -90,6 +88,7 @@ void  __init prom_init_cmdline(void)
 	cp += strlen(rt2880_cmdline);
 	*cp++ = ' ';
 #endif
+
 
 	if (cp != &(arcs_cmdline[0])) /* get rid of trailing space */
 	    --cp;

@@ -89,13 +89,10 @@ endif
 endif
 endif
 
-ifeq ($(ON_BOARD_DDR1),y)
+ifeq ($(ON_BOARD_DDR),y)
 DRAM_TYPE=DDR
-endif
-ifeq ($(ON_BOARD_DDR2),y)
-DRAM_TYPE=DDR
-endif
-ifeq ($(ON_BOARD_SDR),y)
+else
+DRAM_WIDTH=16  #only support 16bit dram width for SDR
 DRAM_TYPE=SDR
 endif
 
@@ -115,13 +112,7 @@ endif
 ifeq ($(ON_BOARD_1024M_DRAM_COMPONENT),y)
 DRAM_SIZE=128
 endif
-ifeq ($(ON_BOARD_2048M_DRAM_COMPONENT),y)
-DRAM_SIZE=256
-endif
 
-# DRAM_WIDTH: SDR(DDR2)
-# 0:16(8)
-# 1:32(16)
 ifeq ($(ON_BOARD_DDR_WIDTH_16),y)
 DRAM_WIDTH=32
 else
@@ -194,6 +185,9 @@ LIBS += common/libcommon.a
 # Add GCC lib
 PLATFORM_LIBS += -L $(shell dirname `$(CC) $(CFLAGS)  -print-libgcc-file-name`)
 
+
+KAIKER_LIBS := $(shell dirname $(CC) $(CFLAGS) -lgcc -print-libgcc-file-name)
+
 # The "tools" are needed early, so put this first
 # Don't include stuff already done in $(LIBS)
 ifneq ($(CFG_ENV_IS), IN_FLASH)
@@ -223,27 +217,6 @@ u-boot.srec:	u-boot
 uboot.bin:	u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 
-
-		@echo ""
-		@echo "===============<<IMPORTANT>>=================="
-ifeq ($(ON_BOARD_NAND_FLASH_COMPONENT),y)
-		@echo "Notes:Uboot firmware is uboot.img NOT uboot.bin"
-endif
-ifeq ($(ON_BOARD_NOR_FLASH_COMPONENT),y)
-		@echo "Notes:Uboot firmware is uboot.bin NOT uboot.img"
-endif
-ifeq ($(ON_BOARD_SPI_FLASH_COMPONENT),y)
-ifeq ($(UBOOT_ROM),y)
-		@echo "Notes:Uboot firmware is uboot.bin NOT uboot.img"
-else
-ifeq ($(UBOOT_RAM),y)
-		@echo "Notes:Uboot firmware in flash is uboot.img NOT uboot.bin"
-endif
-endif
-endif
-		@echo "================================================"
-		@echo ""
-
 uboot.img:	uboot.bin
 ifeq ($(CFG_ENV_IS), IN_SPI)
 		./tools/mkimage -A $(ARCH) -T standalone -C none \
@@ -262,6 +235,11 @@ ifeq ($(CFG_ENV_IS), IN_NAND)
 		-r $(DRAM_TYPE) -s $(DRAM_TOTAL_WIDTH) -t $(DRAM_SIZE) -u $(DRAM_WIDTH) \
 		-y $(DRAM_SYSCFG0) -z $(DRAM_SYSCFG1) -d $< $@
 endif
+		@echo ""
+		@echo "===============<<IMPORTANT>>=================="
+		@echo "Notes: Uboot firmware is uboot.img NOT uboot.bin"
+		@echo "================================================"
+		@echo ""
 
 u-boot.dis:	u-boot
 		$(OBJDUMP) -d $< > $@
@@ -1742,7 +1720,7 @@ backup:
 	F=`basename $(TOPDIR)` ; cd .. ; \
 	gtar --force-local -zcvf `date "+$$F-%Y-%m-%d-%T.tar.gz"` $$F
 
-menuconfig: clean config.in
+menuconfig: config.in
 	$(MAKE) -C scripts/lxdialog all
 	$(CONFIG_SHELL) scripts/Menuconfig config.in
 

@@ -114,7 +114,6 @@ typedef struct {
 
 int CurrentState = 0;	/* default state is "not used" */
 int CurrentConf = 1;	/* default is un-configured */
-static int PBCButtonPressed = 0; /* 0: UnPressed,  1: Pressed */
 
 int led_gpio = WPS_AP_LED_GPIO;
 int pbc_gpio = WPS_AP_PBC_GPIO;
@@ -404,10 +403,6 @@ static void timerHandler(int signo)
 		return;
 
 	WscStatus = getWscStatus(wlan_if);
-	/*
-	printf("<<Raink>> CurrentState = %d\n", CurrentState);
-	printf("<<Raink>> WscStatus = %d\n", WscStatus);
-	*/
 	if(WscStatus == -1)
 		return;
 
@@ -444,16 +439,11 @@ static void timerHandler(int signo)
 			break;
 		
 		case 2: /* WSC Fail */
-			if (PBCButtonPressed == 1)
-			{
-				LedError();
-				PBCButtonPressed = 0;	/* Clear the flag */
-			}
+			LedError();
 			break;
 
 		case 34: /* Configured */
 			LedSuccess();
-			PBCButtonPressed = 0;	/* Clear the flag */
 			break;
 
 		case 0x109: /* Overlap detection */
@@ -462,9 +452,7 @@ static void timerHandler(int signo)
 
 		default:
 			if(isProgressGroup(WscStatus)){  		/*Start WSC Process" */
-				if(PBCButtonPressed == 1){
-					LedInProgress();
-				}
+				LedInProgress();
 				break;
 			}
 	}
@@ -510,7 +498,6 @@ static void nvramIrqHandler(int signum)
 	system("iwpriv ra0 set WscMode=2");
 	//printf("iwpriv ra0 set WscGetConf=1\n");
 	system("iwpriv ra0 set WscGetConf=1");
-	PBCButtonPressed = 1;
 }
 
 int main(int argc, char *argv[])

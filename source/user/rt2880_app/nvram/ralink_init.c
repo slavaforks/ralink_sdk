@@ -107,9 +107,8 @@ void usage(char *cmd)
 	printf("  %s <command> [<platform>] [<file>]\n\n", cmd);
 	printf("command:\n");
 	printf("  rt2860_nvram_show - display rt2860 values in nvram\n");
-#if defined (CONFIG_RTDEV) || \
-	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE) || \
-	defined (CONFIG_RTDEV_PLC)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI) || \
+	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 	printf("  rtdev_nvram_show   - display 2nd ralink device values in nvram\n");
 #endif
 #ifdef CONFIG_DUAL_IMAGE
@@ -121,9 +120,8 @@ void usage(char *cmd)
 	printf("  clear	  - clear all entries in nvram for <platform>\n");
 	printf("platform:\n");
 	printf("  2860    - rt2860\n");
-#if defined (CONFIG_RTDEV) || \
-	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE) || \
-	defined (CONFIG_RTDEV_PLC)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI) || \
+	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 	printf("  rtdev    - 2nd ralink device\n");
 #endif
 #ifdef CONFIG_DUAL_IMAGE
@@ -155,9 +153,8 @@ int main(int argc, char *argv[])
 	if (argc == 2) {
 		if (!strncmp(argv[1], "rt2860_nvram_show", 18))
 			nvram_show(RT2860_NVRAM);
-#if defined (CONFIG_RTDEV) || \
-	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE) || \
-	defined (CONFIG_RTDEV_PLC)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI)|| \
+	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 		else if (!strncmp(argv[1], "rtdev_nvram_show", 17))
 			nvram_show(RTDEV_NVRAM);
 #endif
@@ -165,13 +162,11 @@ int main(int argc, char *argv[])
 		else if (!strncmp(argv[1], "uboot_nvram_show", 17))
 			nvram_show(UBOOT_NVRAM);
 #endif
-#if 1 //def CONFIG_RT2860V2_STA_WPA_SUPPLICANT
+#ifdef CONFIG_RT2860V2_STA_WPA_SUPPLICANT
 		else if (!strncmp(argv[1], "cert_nvram_show", 16))
 			nvram_show(CERT_NVRAM);
 #endif
-#if defined (CONFIG_RT2860V2_AP_WAPI) || defined (CONFIG_RT3090_AP_WAPI) || defined (CONFIG_RT5392_AP_WAPI) || \
-    defined (CONFIG_RT5592_AP_WAPI) || defined (CONFIG_RT3593_AP_WAPI) || defined (CONFIG_RT3572_AP_WAPI) || \
-    defined (CONFIG_RT5572_AP_WAPI) || defined (CONFIG_RT3680_iNIC_AP_WAPI)
+#ifdef CONFIG_RT2860V2_AP_WAPI
 		else if (!strncmp(argv[1], "wapi_nvram_show", 16))
 			nvram_show(WAPI_NVRAM);
 #endif
@@ -184,9 +179,8 @@ int main(int argc, char *argv[])
 			if (!strncmp(argv[2], "2860", 5) ||
 			    !strncasecmp(argv[2], "rt2860", 7)) //b-compatible
 				gen_config(RT2860_NVRAM);
-#if defined (CONFIG_RTDEV) || \
-	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE) || \
-	defined (CONFIG_RTDEV_PLC)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI) || \
+	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 			else if (!strncasecmp(argv[2], "rtdev", 6))
 				gen_config(RTDEV_NVRAM);
 #endif
@@ -198,9 +192,7 @@ int main(int argc, char *argv[])
 			else if (!strncmp(argv[2], "cert", 5))
 				gen_cert(CERT_NVRAM);
 #endif
-#if defined (CONFIG_RT2860V2_AP_WAPI) || defined (CONFIG_RT3090_AP_WAPI) || defined (CONFIG_RT5392_AP_WAPI) || \
-    defined (CONFIG_RT5592_AP_WAPI) || defined (CONFIG_RT3593_AP_WAPI) || defined (CONFIG_RT3572_AP_WAPI) || \
-    defined (CONFIG_RT5572_AP_WAPI) || defined (CONFIG_RT3680_iNIC_AP_WAPI)
+#ifdef CONFIG_RT2860V2_AP_WAPI
 			else if (!strncmp(argv[2], "wapi", 5))
 				gen_cert(WAPI_NVRAM);
 #endif
@@ -210,9 +202,8 @@ int main(int argc, char *argv[])
 			if (!strncmp(argv[2], "2860", 5) ||
 			    !strncasecmp(argv[2], "rt2860", 7)) //b-compatible
 				nvram_show(RT2860_NVRAM);
-#if defined (CONFIG_RTDEV) || \
-	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE) || \
-	defined (CONFIG_RTDEV_PLC)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI) || \
+	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 			else if (!strncasecmp(argv[2], "rtdev", 6))
 				nvram_show(RTDEV_NVRAM);
 #endif
@@ -224,9 +215,7 @@ int main(int argc, char *argv[])
 			else if (!strncasecmp(argv[2], "cert", 5))
 				nvram_show(CERT_NVRAM);
 #endif
-#if defined (CONFIG_RT2860V2_AP_WAPI) || defined (CONFIG_RT3090_AP_WAPI) || defined (CONFIG_RT5392_AP_WAPI) || \
-    defined (CONFIG_RT5592_AP_WAPI) || defined (CONFIG_RT3593_AP_WAPI) || defined (CONFIG_RT3572_AP_WAPI) || \
-    defined (CONFIG_RT5572_AP_WAPI) || defined (CONFIG_RT3680_iNIC_AP_WAPI)
+#ifdef CONFIG_RT2860V2_AP_WAPI
 			else if (!strncasecmp(argv[2], "wapi", 5))
 				nvram_show(WAPI_NVRAM);
 #endif
@@ -236,9 +225,8 @@ int main(int argc, char *argv[])
 			if (!strncmp(argv[2], "2860", 5) || 
 			    !strncasecmp(argv[2], "rt2860", 7)) //b-compatible
 				nvram_clear(RT2860_NVRAM);
-#if defined (CONFIG_RTDEV) || \
-	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE) || \
-	defined (CONFIG_RTDEV_PLC)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI) || \
+	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 			else if (!strncasecmp(argv[2], "rtdev", 6))
 				nvram_clear(RTDEV_NVRAM);
 #endif
@@ -250,9 +238,7 @@ int main(int argc, char *argv[])
 			else if (!strncasecmp(argv[2], "cert", 5))
 				nvram_clear(CERT_NVRAM);
 #endif
-#if defined (CONFIG_RT2860V2_AP_WAPI) || defined (CONFIG_RT3090_AP_WAPI) || defined (CONFIG_RT5392_AP_WAPI) || \
-    defined (CONFIG_RT5592_AP_WAPI) || defined (CONFIG_RT3593_AP_WAPI) || defined (CONFIG_RT3572_AP_WAPI) || \
-    defined (CONFIG_RT5572_AP_WAPI) || defined (CONFIG_RT3680_iNIC_AP_WAPI)
+#ifdef CONFIG_RT2860V2_AP_WAPI
 			else if (!strncasecmp(argv[2], "wapi", 5))
 				nvram_clear(WAPI_NVRAM);
 #endif
@@ -265,9 +251,8 @@ int main(int argc, char *argv[])
 			if (!strncmp(argv[2], "2860", 5) ||
 			    !strncasecmp(argv[2], "rt2860", 7)) //b-compatible
 				renew_nvram(RT2860_NVRAM, argv[3]);
-#if defined (CONFIG_RTDEV) || \
-	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE) || \
-	defined (CONFIG_RTDEV_PLC)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI) || \
+	defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 			else if (!strncasecmp(argv[2], "rtdev", 6))
 				renew_nvram(RTDEV_NVRAM, argv[3]);
 #endif
@@ -306,9 +291,7 @@ int gen_cert(int mode)
 		}
 	}
 #endif
-#if defined (CONFIG_RT2860V2_AP_WAPI) || defined (CONFIG_RT3090_AP_WAPI) || defined (CONFIG_RT5392_AP_WAPI) || \
-    defined (CONFIG_RT5592_AP_WAPI) || defined (CONFIG_RT3593_AP_WAPI) || defined (CONFIG_RT3572_AP_WAPI) || \
-    defined (CONFIG_RT5572_AP_WAPI) || defined (CONFIG_RT3680_iNIC_AP_WAPI)
+#ifdef CONFIG_RT2860V2_AP_WAPI
 	if (mode == WAPI_NVRAM) {
 		file_name = nvram_bufget(WAPI_NVRAM, "ASCertFile");
 		if (strlen(file_name) > 0)
@@ -341,20 +324,32 @@ int gen_config(int mode)
 	nvram_bufset(mode, "ModuleName", "RT2860");
 	nvram_commit(mode);
 	*/
+	if (mode == RT2860_NVRAM) {
+		unsigned char temp[2], buf[4];
+		flash_read_NicConf(buf);
+		sprintf(temp, "%x", buf[1]);
+		nvram_bufset(mode, "RFICType", temp);
+		sprintf(temp, "%x", buf[0]&0xf0>>4);
+		if (atoi(temp) < atoi(nvram_bufget(mode, "HT_TxStream")))
+			nvram_bufset(mode, "HT_TxStream", temp);
+		nvram_bufset(mode, "TXPath", temp);
+		sprintf(temp, "%x", buf[0]&0x0f);
+		if (atoi(temp) < atoi(nvram_bufget(mode, "HT_RxStream")))
+			nvram_bufset(mode, "HT_RxStream", temp);
+		nvram_bufset(mode, "RXPath", temp);
+		nvram_commit(mode);
+	}
 
 	system("mkdir -p /etc/Wireless/RT2860");
 	if (mode == RT2860_NVRAM) {
 		fp = fopen("/etc/Wireless/RT2860/RT2860.dat", "w+");
 	} else if (mode == RTDEV_NVRAM) {
-#if defined (CONFIG_RTDEV)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI)
 		system("mkdir -p /etc/Wireless/iNIC");
 		fp = fopen("/etc/Wireless/iNIC/iNIC_ap.dat", "w+");
 #elif defined (CONFIG_RT2561_AP) || defined (CONFIG_RT2561_AP_MODULE)
 		system("mkdir -p /etc/Wireless/RT2561");
 		fp = fopen("/etc/Wireless/RT2561/RT2561.dat", "w+");
-#elif defined (CONFIG_RTDEV_PLC)
-		system("mkdir -p /etc/PLC");
-		fp = fopen("/etc/PLC/plc.dat", "w+");
 #endif
 	} else
 		return 0;
@@ -366,7 +361,7 @@ int gen_config(int mode)
 #define FPRINT_STR(x) fprintf(fp, #x"=%s\n", nvram_bufget(mode, #x));
 
 	if ((RT2860_NVRAM == mode) 
-#if defined (CONFIG_RTDEV)
+#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI)
 		|| (RTDEV_NVRAM == mode)
 #endif
 		) {
@@ -384,7 +379,7 @@ int gen_config(int mode)
 		FPRINT_STR(SSID6);
 		FPRINT_STR(SSID7);
 		FPRINT_STR(SSID8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(SSID9);
 		FPRINT_STR(SSID10);
 		FPRINT_STR(SSID11);
@@ -528,7 +523,7 @@ int gen_config(int mode)
 		FPRINT_STR(WapiPsk6);
 		FPRINT_STR(WapiPsk7);
 		FPRINT_STR(WapiPsk8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(WapiPsk9);
 		FPRINT_STR(WapiPsk10);
 		FPRINT_STR(WapiPsk11);
@@ -569,7 +564,7 @@ int gen_config(int mode)
 		FPRINT_STR(WPAPSK6);
 		FPRINT_STR(WPAPSK7);
 		FPRINT_STR(WPAPSK8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(WPAPSK9);
 		FPRINT_STR(WPAPSK10);
 		FPRINT_STR(WPAPSK11);
@@ -590,7 +585,7 @@ int gen_config(int mode)
 		FPRINT_STR(Key1Str6);
 		FPRINT_STR(Key1Str7);
 		FPRINT_STR(Key1Str8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(Key1Str9);
 		FPRINT_STR(Key1Str10);
 		FPRINT_STR(Key1Str11);
@@ -610,7 +605,7 @@ int gen_config(int mode)
 		FPRINT_STR(Key2Str6);
 		FPRINT_STR(Key2Str7);
 		FPRINT_STR(Key2Str8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(Key2Str9);
 		FPRINT_STR(Key2Str10);
 		FPRINT_STR(Key2Str11);
@@ -629,7 +624,7 @@ int gen_config(int mode)
 		FPRINT_STR(Key3Str6);
 		FPRINT_STR(Key3Str7);
 		FPRINT_STR(Key3Str8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(Key3Str9);
 		FPRINT_STR(Key3Str10);
 		FPRINT_STR(Key3Str11);
@@ -648,7 +643,7 @@ int gen_config(int mode)
 		FPRINT_STR(Key4Str6);
 		FPRINT_STR(Key4Str7);
 		FPRINT_STR(Key4Str8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(Key4Str9);
 		FPRINT_STR(Key4Str10);
 		FPRINT_STR(Key4Str11);
@@ -712,7 +707,7 @@ int gen_config(int mode)
 		FPRINT_STR(AccessControlList6);
 		FPRINT_NUM(AccessPolicy7);
 		FPRINT_STR(AccessControlList7);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_NUM(AccessPolicy8);
 		FPRINT_STR(AccessControlList8);
 		FPRINT_NUM(AccessPolicy9);
@@ -749,7 +744,7 @@ int gen_config(int mode)
 		FPRINT_STR(RADIUS_Key6);
 		FPRINT_STR(RADIUS_Key7);
 		FPRINT_STR(RADIUS_Key8);
-#if defined (CONFIG_16MBSSID_MODE)
+#if (defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT3883)) && defined (CONFIG_16MBSSID_MODE)
 		FPRINT_STR(RADIUS_Key9);
 		FPRINT_STR(RADIUS_Key10);
 		FPRINT_STR(RADIUS_Key11);
@@ -787,8 +782,6 @@ int gen_config(int mode)
 		FPRINT_STR(ApCliKey3Str);
 		FPRINT_NUM(ApCliKey4Type);
 		FPRINT_STR(ApCliKey4Str);
-		//FPRINT_NUM(TempComp);
-		//FPRINT_NUM(EfuseBufferMode);
 
 		//Radio On/Off
 		if (atoi(nvram_bufget(mode, "RadioOff")) == 1)
@@ -940,17 +933,6 @@ int gen_config(int mode)
 		else
 			fprintf(fp, "WscConfStatus=%d\n", 2);
 	}
-#elif defined (CONFIG_RTDEV_PLC)
-	if (RTDEV_NVRAM == mode) {
-		FPRINT_STR(MacAddress);
-		FPRINT_STR(NPW);
-		FPRINT_STR(DPW);
-		FPRINT_NUM(BackupCCo);
-		FPRINT_NUM(CCo);
-		FPRINT_NUM(UnAssoCCo);
-		FPRINT_NUM(STA);
-		FPRINT_NUM(UnAssoSTA);
-	}
 #endif
 
 	nvram_close(mode);
@@ -963,7 +945,7 @@ int renew_nvram(int mode, char *fname)
 	FILE *fp;
 #define BUFSZ 1024
 	unsigned char buf[BUFSZ], *p;
-	unsigned char wan_mac[32];
+	unsigned wan_mac[32];
 	int found = 0, need_commit = 0;
 
 	if (NULL == (fp = fopen(fname, "ro"))) {

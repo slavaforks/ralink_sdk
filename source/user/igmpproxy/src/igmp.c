@@ -132,8 +132,7 @@ void acceptIgmp(int recvlen) {
             // Check if the source address matches a valid address on upstream vif.
             checkVIF = getIfByIx( upStreamVif );
             if(checkVIF == 0) {
-//              log(LOG_ERR, 0, "Upstream VIF was null.");
-                log(LOG_WARNING, 0, "Upstream VIF was null.");
+                log(LOG_ERR, 0, "Upstream VIF was null.");
                 return;
             } 
             else if(src == checkVIF->InAdr.s_addr) {

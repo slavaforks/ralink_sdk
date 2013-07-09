@@ -136,10 +136,10 @@
 typedef struct dram_header {
 	uint8_t		dram_parm;	/* DRAM setting */
 	union{
-	uint8_t		dram_magic;	/* Magic number of DRAM setting (0x5a) */
-	struct {
-		uint8_t	cpu_pll_magic_l:4;	
-		uint8_t	dram_magic_h:4;
+		uint8_t		dram_magic;	/* Magic number of DRAM setting (0x5a) */
+		struct {
+			uint8_t	cpu_pll_magic_l:4;	
+			uint8_t	dram_magic_h:4;
 		}u;
 	};
 	uint16_t	cpu_pll_cfg;

@@ -5,8 +5,6 @@
 #ifndef __WSC_NETLINK_H__
 #define __WSC_NETLINK_H__
 
-#include <linux/types.h>
-#include <linux/if.h>
 #include <linux/wireless.h>
 
 #define NETLINK_ROUTE 0

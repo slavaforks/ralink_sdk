@@ -6,8 +6,13 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+
+#include <linux/version.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)		// for 3052 missing include file? --YY
+#include <net/if.h>
 #include <linux/types.h>
-#include <linux/if.h>
+#endif
+
 #include <linux/wireless.h>
 #include <netinet/in.h>
 #include "wsc_common.h"

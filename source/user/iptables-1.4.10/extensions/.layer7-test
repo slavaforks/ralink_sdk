@@ -1,2 +1,0 @@
-#! /bin/sh
-[ -f $KERNEL_DIR/include/linux/netfilter/xt_layer7.h ] && echo layer7

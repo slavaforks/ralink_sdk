@@ -7,11 +7,6 @@ RAMDISK_SIZE  := $(shell echo $(CONFIG_BLK_DEV_RAM_SIZE))
 MKIMAGE_DIR = $(ROOTDIR)/user/mkimage
 CUR_DIR = $(shell pwd)
 COMP = lzma
-ifdef LZMA_PATH
-COMP_BIN = $(LZMA_PATH)/$(COMP)
-else
-COMP_BIN = $(COMP)
-endif
 
 ROMFS_DIRS = \
 	tmp \
@@ -49,21 +44,14 @@ endif
 	$(ROMFSINST) /etc_ro/motd
 	$(ROMFSINST) /etc/fstab
 
-	$(ROMFSINST) /etc_ro/Wireless/RT2860AP/RT2860_default_novlan
-	$(ROMFSINST) /etc_ro/Wireless/RT2860AP/RT2860_default_vlan
 	$(ROMFSINST) /etc_ro/wlan/RT5350_AP_1T1R_V1_0.bin
 
+	$(ROMFSINST) /etc_ro/Wireless/RT2860AP/RT2860_default_novlan
+	$(ROMFSINST) /etc_ro/Wireless/RT2860AP/RT2860_default_vlan
 	$(ROMFSINST) -e CONFIG_RT3572_AP /etc_ro/Wireless/iNIC/RT2860AP.dat
-	$(ROMFSINST) -e CONFIG_RT5572_AP /etc_ro/Wireless/iNIC/RT2860AP.dat
-	$(ROMFSINST) -e CONFIG_RT3680_iNIC_AP iNIC_ap.dat /etc_ro/Wireless/iNIC/RT2860AP.dat
-#	$(ROMFSINST) -e CONFIG_RT3572_AP /etc_ro/Wireless/iNIC/RT3572_USB_2T2R_LNA_ALC_V1_4.bin
 	$(ROMFSINST) -e CONFIG_RT3572_AP /etc_ro/Wireless/iNIC/RT3572_USB_2T2R_LNA_without_ALC_V1_4.bin
-	$(ROMFSINST) -e CONFIG_RT5572_AP /etc_ro/Wireless/iNIC/RT5572_USB_2T2R_V1_3.BIN
-	$(ROMFSINST) -e CONFIG_RT3680_iNIC_AP /etc_ro/Wireless/iNIC/RT3680_iNIC.bin
 
-	$(ROMFSINST) -e CONFIG_RTUSB_AP /etc_ro/Wireless/RT2860APCard.dat
-	$(ROMFSINST) -e CONFIG_RTUSB_AP /etc_ro/Wireless/iNIC/RT3572_USB_2T2R_LNA_without_ALC_V1_4.bin
-	$(ROMFSINST) -e CONFIG_RTUSB_AP /etc_ro/Wireless/iNIC/RT5572_USB_2T2R_V1_3.BIN
+	$(ROMFSINST) -e CONFIG_RT5572_AP /etc_ro/Wireless/iNIC/RT2860AP.dat
 
 romfs.post:: 
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
@@ -75,13 +63,7 @@ ifeq	($(LINUXDIR),linux-2.4.x)
 else
 	#linux2.6.x support squashfs with lzma
 ifeq	($(CONFIG_BLK_DEV_INITRD),)
-
-ifeq	($(LINUXDIR),linux-2.6.21.x)
 	$(CONFIG_CROSS_COMPILER_PATH)/mksquashfs_lzma-3.2 $(ROMFSDIR) $(RAMDISK)
-endif
-ifeq	($(LINUXDIR),linux-2.6.36.x)
-	$(CONFIG_CROSS_COMPILER_PATH)/mksquashfs_lzma-4.2 $(ROMFSDIR) $(RAMDISK)
-endif
 endif
 endif
 
@@ -98,7 +80,7 @@ mkimage: $(MKIMAGE_DIR)/crc32.c $(MKIMAGE_DIR)/mkimage.c
 
 image: mkimage
 	$(CROSS_COMPILE)objcopy -O binary -R .note -R .comment -S $(ROOTDIR)/$(LINUXDIR)/vmlinux  $(KERNELZ)
-	cd $(IMAGEDIR) ; rm -f $(KERNELZ).*; $(COMP_BIN) -9 -f -S .$(COMP) $(KERNELZ)
+	cd $(IMAGEDIR) ; rm -f $(KERNELZ).*; $(COMP) -9 -f -S .$(COMP) $(KERNELZ)
 
 ifeq	($(CONFIG_BLK_DEV_INITRD),)
 ifeq	($(CONFIG_ROOTFS_IN_FLASH_NO_PADDING),)

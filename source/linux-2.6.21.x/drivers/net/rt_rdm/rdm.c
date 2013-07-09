@@ -22,7 +22,14 @@ static int register_control = RDM_WIRELESS_ADDR;
 #ifdef  CONFIG_DEVFS_FS
 static devfs_handle_t devfs_handle;
 #endif
-int rdm_major =  253;
+int rdm_major =  254;
+
+
+struct file_operations rdm_fops = {
+    ioctl:      rdm_ioctl,
+    open:       rdm_open,
+    release:    rdm_release,
+};
 
 
 int rdm_open(struct inode *inode, struct file *filp)
@@ -37,12 +44,9 @@ int rdm_release(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
-long rdm_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
-#else
+
 int rdm_ioctl (struct inode *inode, struct file *filp,
                      unsigned int cmd, unsigned long *arg)
-#endif
 {
 	unsigned int rtvalue, baseaddr, offset;
 	unsigned int addr=0,count=0;
@@ -67,16 +71,6 @@ int rdm_ioctl (struct inode *inode, struct file *filp,
 				le32_to_cpu(*(volatile u32 *)(addr+12)));
 		}
 
-	}
-	else if (cmd == RT_RDM_CMD_DUMP_FPGA_EMU) 
-	{
-	        for (count=0; count < RT_RDM_DUMP_RANGE ; count++) {
-		    addr = baseaddr + (*(int *)arg) + (count*16);
-		    printk("this.cpu_gen.set_reg32('h%08X,'h%08X);\n", addr, le32_to_cpu(*(volatile u32 *)(addr)));
-		    printk("this.cpu_gen.set_reg32('h%08X,'h%08X);\n", addr+4, le32_to_cpu(*(volatile u32 *)(addr+4)));
-		    printk("this.cpu_gen.set_reg32('h%08X,'h%08X);\n", addr+8, le32_to_cpu(*(volatile u32 *)(addr+8)));
-		    printk("this.cpu_gen.set_reg32('h%08X,'h%08X);\n", addr+12, le32_to_cpu(*(volatile u32 *)(addr+12)));
-		}
 	}
 	else if (cmd == RT_RDM_CMD_READ) //also read, but return a value instaead of printing it out
 	{
@@ -113,16 +107,6 @@ int rdm_ioctl (struct inode *inode, struct file *filp,
 
 	return 0;
 }
-
-struct file_operations rdm_fops = {
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
-    unlocked_ioctl:      rdm_ioctl,
-#else
-    ioctl:      rdm_ioctl,
-#endif
-    open:       rdm_open,
-    release:    rdm_release,
-};
 
 static int rdm_init(void)
 

@@ -2,9 +2,6 @@
 
 # udhcpc script edited by Tim Riker <Tim@Rikers.org>
 
-. /sbin/config.sh
-. /sbin/global.sh
-
 [ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
 
 RESOLV_CONF="/etc/resolv.conf"
@@ -43,17 +40,6 @@ case "$1" in
 
 		# restart igmpproxy daemon
 		config-igmpproxy.sh
-		if [ "$wanmode" = "L2TP" ]; then
-			if [ "$CONFIG_PPPOL2TP" == "y" ]; then
-				openl2tpd
-			else
-				l2tpd
-				sleep 1
-				l2tp-control "start-session $l2tp_srv"
-			fi
-		elif [ "$wanmode" = "PPTP" ]; then
-			pppd file /etc/options.pptp  &
-		fi
         ;;
 esac
 

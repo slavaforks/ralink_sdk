@@ -34,12 +34,11 @@ OBJS	+= spi_drv.o
 endif
 
 ifeq ($(CFG_ENV_IS), IN_SPI)
- ifeq ($(RT6855A_MP), y)
- OBJS	+= spi_rt6855A_flash.o 
- else
- OBJS	+= spi_flash.o 
- endif
+OBJS	+= spi_flash.o 
  ifeq ($(RT3883_MP), y)
+ OBJS	+= spi_drv.o 
+ endif
+ ifeq ($(RT3352_MP), y)
  OBJS	+= spi_drv.o 
  endif
 endif

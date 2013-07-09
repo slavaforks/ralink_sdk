@@ -56,18 +56,7 @@ extern int tsec_initialize(bd_t*, int);
 extern int rt2880_eth_initialize(bd_t *bis);
 
 static struct eth_device *eth_devices, *eth_current;
-
-void eth_parse_enetaddr(const char *addr, uchar *enetaddr)
-{
-	char *end;
-	int i;
-
-	for (i = 0; i < 6; ++i) {
-		enetaddr[i] = addr ? simple_strtoul(addr, &end, 16) : 0;
-		if (addr)
-			addr = (*end) ? end + 1 : end;
-	}
-}
+static char rt2880_gmac1_mac[6];
 
 struct eth_device *eth_get_dev(void)
 {
@@ -123,8 +112,8 @@ int eth_register(struct eth_device* dev)
 
 int eth_initialize(bd_t *bis)
 {
-	unsigned char rt2880_gmac1_mac[6];
-	int eth_number = 0, regValue=0;
+	unsigned char enetvar[32], env_enetaddr[6];
+	int i, eth_number = 0, regValue=0;
 
 	eth_devices = NULL;
 	eth_current = NULL;
@@ -248,12 +237,10 @@ int eth_initialize(bd_t *bis)
 #endif
 
 			//if flash is empty, use default mac address
-			if (memcmp(rt2880_gmac1_mac, empty_mac, 6) == 0)
-				eth_parse_enetaddr(CONFIG_ETHADDR, rt2880_gmac1_mac);
-
-			if (memcmp (rt2880_gmac1_mac, "\0\0\0\0\0\0", 6) == 0)
-				eth_parse_enetaddr(CONFIG_ETHADDR, rt2880_gmac1_mac);
-
+			if(memcmp(rt2880_gmac1_mac, empty_mac, 6) == 0) {
+			    memcpy(rt2880_gmac1_mac, CONFIG_ETHADDR, 6);
+			}
+		
 			memcpy(dev->enetaddr, rt2880_gmac1_mac, 6);
 
 			//set my mac to gdma register

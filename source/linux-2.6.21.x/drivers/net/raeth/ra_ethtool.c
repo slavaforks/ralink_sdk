@@ -41,7 +41,7 @@ unsigned char get_current_phy_address(void)
 	ei_local = cur_dev_p->priv;
 	return ei_local->mii_info.phy_id;
 }
-#if 0
+
 static u32 et_get_tx_csum(struct net_device *dev)
 {
 	return (sysRegRead(GDMA1_FWD_CFG) & GDM1_DISCRC) ? 0 : 1;	// a pitfall here, "0" means to enable.
@@ -81,7 +81,7 @@ static int et_set_rx_csum(struct net_device *dev, u32 data)
 	sysRegWrite(GDMA1_FWD_CFG, value);
     return 0;
 }
-#endif
+
 
 #define MII_CR_ADDR			0x00
 #define MII_CR_MR_AUTONEG_ENABLE	(1 << 12)
@@ -89,7 +89,6 @@ static int et_set_rx_csum(struct net_device *dev, u32 data)
 
 #define AUTO_NEGOTIATION_ADVERTISEMENT	0x04
 #define AN_PAUSE			(1 << 10)
-
 static void et_get_pauseparam(struct net_device *dev, struct ethtool_pauseparam *epause)
 {
 	int mii_an_reg;
@@ -234,10 +233,10 @@ struct ethtool_ops ra_ethtool_ops = {
 	.set_settings		= et_set_settings,
 	.get_pauseparam		= et_get_pauseparam,
 	.set_pauseparam		= et_set_pauseparam,
-//	.get_rx_csum		= et_get_rx_csum,
-//	.set_rx_csum		= et_set_rx_csum,
-//	.get_tx_csum		= et_get_tx_csum,
-//	.set_tx_csum		= et_set_tx_csum,
+	.get_rx_csum		= et_get_rx_csum,
+	.set_rx_csum		= et_set_rx_csum,
+	.get_tx_csum		= et_get_tx_csum,
+	.set_tx_csum		= et_set_tx_csum,
 	.nway_reset		= et_nway_reset,
 	.get_link		= et_get_link,
 	.get_msglevel		= et_get_msglevel,

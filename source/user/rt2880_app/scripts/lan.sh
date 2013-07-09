@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: lan.sh,v 1.27.4.1 2012-02-09 01:24:27 chhung Exp $
+# $Id: lan.sh,v 1.26 2010-04-06 02:35:01 yy Exp $
 #
 # usage: wan.sh
 #
@@ -12,6 +12,7 @@ killall -q udhcpd
 killall -q lld2d
 killall -q igmpproxy
 killall -q upnpd
+killall -q radvd
 killall -q pppoe-relay
 killall -q dnsmasq
 rm -rf /var/run/lld2d-*
@@ -126,6 +127,18 @@ fi
 
 
 
+# stp
+if [ "$wan_if" = "br0" -o "$lan_if" = "br0" ]; then
+	stp=`nvram_get 2860 stpEnabled`
+	if [ "$stp" = "1" ]; then
+		brctl setfd br0 15
+		brctl stp br0 1
+	else
+		brctl setfd br0 1
+		brctl stp br0 0
+	fi
+fi
+
 # lltd
 lltd=`nvram_get 2860 lltdEnabled`
 if [ "$lltd" = "1" ]; then
@@ -149,7 +162,17 @@ if [ "$opmode" = "0" -o "$opmode" = "1" ]; then
 fi
 
 # radvd
-radvd.sh
+radvd=`nvram_get 2860 radvdEnabled`
+ifconfig sit0 down
+echo "0" > /proc/sys/net/ipv6/conf/all/forwarding
+if [ "$radvd" = "1" ]; then
+	echo "1" > /proc/sys/net/ipv6/conf/all/forwarding
+	ifconfig sit0 up
+	ifconfig sit0 add 2002:1101:101::1101:101/16
+	route -A inet6 add 2000::/3 gw ::17.1.1.20 dev sit0
+	route -A inet6 add 2002:1101:101:0::/64 dev br0
+	radvd -C /etc_ro/radvd.conf -d 1 &
+fi
 
 # pppoe-relay
 pppr=`nvram_get 2860 pppoeREnabled`

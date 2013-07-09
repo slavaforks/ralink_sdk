@@ -560,5 +560,4 @@ int request_irq(unsigned int irq, irq_handler_t handler,
 
 	return retval;
 }
-EXPORT_SYMBOL(setup_irq);
 EXPORT_SYMBOL(request_irq);

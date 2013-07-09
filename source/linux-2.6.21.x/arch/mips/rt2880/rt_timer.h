@@ -65,11 +65,11 @@
 
 #define INTENA      (RALINK_INTCL_BASE + 0x34)  /* Interrupt Enable */
 
-struct timer_data {
+struct timer0_data {
 	unsigned long expires;
 	unsigned long data;
-	void (*tmr_callback_function)(unsigned long);
-	spinlock_t    tmr_lock;
+	void (*tmr0_callback_function)(unsigned long);
+	spinlock_t      tmr0_lock;
 };
 
 
@@ -101,9 +101,6 @@ enum timer_clock_freq {
 
 int request_tmr_service(int interval, void (*function)(unsigned long), unsigned long data);
 int unregister_tmr_service(void);
-
-int request_tmr1_service(int interval, void (*function)(unsigned long), unsigned long data);
-int unregister_tmr1_service(void);
 
 #endif
 

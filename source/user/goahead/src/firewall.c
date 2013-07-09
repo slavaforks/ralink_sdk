@@ -3,7 +3,7 @@
  *
  *	Copyright (c) Ralink Technology Corporation All Rights Reserved.
  *
- *	$Id: firewall.c,v 1.44 2011-07-01 12:29:36 yy Exp $
+ *	$Id: firewall.c,v 1.38.2.4 2011-03-22 06:40:24 chhung Exp $
  */
 
 /*
@@ -32,7 +32,6 @@ char l7name[8192];						// export it for internet.c qos
 										// (The actual string is about 7200 bytes.)
 
 int getGoAHeadServerPort(void);
-
 
 int isMacValid(char *str)
 {
@@ -201,17 +200,6 @@ static int  getIPPortFilterEnableASP(int eid, webs_t wp, int argc, char_t **argv
 	return -1;
 }
 
-inline static void conntrack_flush(void)
-{
-	doSystem("cat /proc/sys/net/netfilter/nf_conntrack_udp_timeout > /var/.udpbackup");
-	doSystem("echo 0 > /proc/sys/net/netfilter/nf_conntrack_udp_timeout");
-	doSystem("cat /var/.udpbackup > /proc/sys/net/netfilter/nf_conntrack_udp_timeout; rm -f /var/.udpbackup");
-
-	doSystem("cat /proc/sys/net/netfilter/nf_conntrack_tcp_timeout_established > /var/.tcpbackup");
-	doSystem("echo 0 > /proc/sys/net/netfilter/nf_conntrack_tcp_timeout_established");
-	doSystem("cat /var/.tcpbackup > /proc/sys/net/netfilter/nf_conntrack_tcp_timeout_established; rm -f /var/.tcpbackup");
-}
-
 /*
  * hide the possible "error/warn" message when deleting a non-exist chain.
  */
@@ -307,9 +295,7 @@ static void iptablesAllNATClear(void)
 	doSystem("/bin/super_dmz -f");
 	iptablesPortForwardClear();
 	iptablesDMZClear();
-	conntrack_flush();
 }
-
 
 #if 0
 char *insert(char *subs, int index, char *str, char delimit)
@@ -1801,9 +1787,6 @@ static void portForwardDelete(webs_t wp, char_t *path, char_t *query)
 			// restart DMZ
 			iptablesDMZFlush();
 			iptablesDMZRun();
-
-			// flush conntrack
-			conntrack_flush();
 		}
 	}
 
@@ -1882,8 +1865,6 @@ static void singlePortForwardDelete(webs_t wp, char_t *path, char_t *query)
 		// restart DMZ
 		iptablesDMZFlush();
 		iptablesDMZRun();
-
-		conntrack_flush();
 	}
 
     websHeader(wp);
@@ -2063,7 +2044,6 @@ static void portForward(webs_t wp, char_t *path, char_t *query)
 		iptablesPortForwardFlush();		//disable
 		iptablesDMZFlush();
 		iptablesDMZRun();
-		conntrack_flush();
 		goto end;
 	}
 
@@ -2073,7 +2053,6 @@ static void portForward(webs_t wp, char_t *path, char_t *query)
 		iptablesPortForwardRun();
 		iptablesDMZFlush();
 		iptablesDMZRun();
-		conntrack_flush();
 		goto end;
 	}
 
@@ -2172,7 +2151,6 @@ static void singlePortForward(webs_t wp, char_t *path, char_t *query)
 		//no chainge in rules
 		iptablesDMZFlush();
 		iptablesDMZRun();
-		conntrack_flush();
 		goto end;
 	}
 
@@ -2182,7 +2160,6 @@ static void singlePortForward(webs_t wp, char_t *path, char_t *query)
 		iptablesSinglePortForwardRun();
 		iptablesDMZFlush();
 		iptablesDMZRun();
-	        conntrack_flush();
 		goto end;
 	}
 

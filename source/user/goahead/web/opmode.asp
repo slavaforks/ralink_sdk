@@ -11,7 +11,6 @@ var opmode;
 var old_mode;
 var hwnatb = "<% getHWNATBuilt(); %>";
 var apclib = "<% getWlanApcliBuilt(); %>";
-var eth_conv_mac = "<% getCfgGeneral(1, "ethConvertMAC"); %>";
 
 function style_display_on()
 {
@@ -27,38 +26,15 @@ function style_display_on()
 
 function swtich_ethConv_apcli()
 {
-	document.getElementById("div_ethConvMac").style.visibility = "hidden";
-	document.getElementById("div_ethConvMac").style.display = "none";
-	document.getElementById("oEthConvMode").disabled = true;
-
 	if (document.opmode.ethConv.options.selectedIndex == 1) {
-		document.getElementById("div_ethConvMac").style.visibility = "visible";
-		document.getElementById("div_ethConvMac").style.display = "block";
 		document.getElementById("ethConv").disabled = false;
-		document.getElementById("oEthConvMode").disabled = false;
-		if (document.opmode.oEthConvMode[2].checked == true)
-			switchEthConvMode(2);
-		else if (document.opmode.oEthConvMode[1].checked == true)
-			switchEthConvMode(1);
-		else
-			switchEthConvMode(0);
+		document.getElementById("apcliEnbl").disabled = true;
 	} else if (document.opmode.apcliEnbl.options.selectedIndex == 1) {
 		document.getElementById("ethConv").disabled = true;
 		document.getElementById("apcliEnbl").disabled = false;
 	} else {
 		document.getElementById("ethConv").disabled = false;
 		document.getElementById("apcliEnbl").disabled = false;
-	}
-}
-
-function switchEthConvMode(mode)
-{
-	document.getElementById("oEthConvMac").disabled = true;
-	document.opmode.oEthConvMode[mode].checked = true;
-	if (mode == 2)
-	{
-		document.opmode.oEthConvMac.disabled = false;
-		document.opmode.oEthConvMac.value = eth_conv_mac;
 	}
 }
 
@@ -96,27 +72,11 @@ function changeMode()
 		if (dpbsta == "1") {
 			document.getElementById("eth_conv").style.visibility = "visible";
 			document.getElementById("eth_conv").style.display = "block";
-			document.getElementById("ethConv").disabled = false;
-			if (ec_en == "1") {
+			if (ec_en == "1")
 				document.opmode.ethConv.options.selectedIndex = 1;
-				if (eth_conv_mac == "00:00:00:00:00:00" || eth_conv_mac == "") 
-				{
-					document.opmode.oEthConvMode[0].checked = true;
-				}
-				else if (eth_conv_mac == "FF:FF:FF:FF:FF:FF")
-				{
-					document.opmode.oEthConvMode[1].checked = true;
-				}
-				else
-				{
-					document.opmode.oEthConvMode[2].checked = true;
-				}
-			}
 			else
-			{
 				document.opmode.ethConv.options.selectedIndex = 0;
 			}
-		}
 		if (apclib == "1") {
 			document.getElementById("div_apcli").style.visibility = "visible";
 			document.getElementById("div_apcli").style.display = "block";
@@ -280,28 +240,6 @@ function initValue()
 	changeMode();
 }
 
-function checkData()
-{
-	if (document.opmode.oEthConvMode[2].checked == true)
-	{
-		var re = /[A-Fa-f0-9]{2}:[A-Fa-f0-9]{2}:[A-Fa-f0-9]{2}:[A-Fa-f0-9]{2}:[A-Fa-f0-9]{2}:[A-Fa-f0-9]{2}/;
-		if (document.opmode.oEthConvMac.value.length == 0)
-		{
-			alert("MAC Address should not be empty!");
-			document.opmode.oEthConvMac.focus();
-			return false;
-		}
-		if (!re.test(document.opmode.oEthConvMac.value))
-		{
-			alert("Please fill the MAC Address in correct format! (XX:XX:XX:XX:XX:XX)");
-			document.opmode.oEthConvMac.focus();
-			return false;
-		}
-	}
-
-	return true;
-}
-
 function msg()
 {
 	if(document.opmode.opMode[1].checked == true && <% isOnePortOnly(); %> ){
@@ -309,15 +247,6 @@ function msg()
 	}
 }
 
-function opmode_submit()
-{
-	msg();
-	if (checkData() == true)
-	{
-		document.opmode.submit(); 
-		parent.menu.location.reload();
-	}
-}
 </script>
 </head>
 
@@ -377,22 +306,12 @@ function opmode_submit()
     </select>
   </td>
 </tr>
-<tr id ="div_ethConvMac">
-  <td>
-    <dl>
-      <dt><input type="radio" name="oEthConvMode" id="oEthConvMode" value="0" onClick="switchEthConvMode(0)">use wireless itself MAC
-      <dt><input type="radio" name="oEthConvMode" id="oEthConvMode" value="1" onClick="switchEthConvMode(1)">use source MAC of first packet coming from wired device
-      <dt><input type="radio" name="oEthConvMode" id="oEthConvMode" value="2" onClick="switchEthConvMode(2)">use desired MAC
-      <dd><input type="text" name="oEthConvMac" id="oEthConvMac" maxlength=17 value=""></dd>
-    </dl>
-  </td>
-</tr>
 </table>
-<table id="div_apcli" border="0" cellpadding="2" cellspacing="1">
+<table id="div_apcli" border="0" cellpadding="2" cellspacing="1" OnChange="swtich_ethConv_apcli()">
 <tr>
   <td id="apcli_mode">AP Client:<td>
   <td>
-    <select id="apcliEnbl" name="apcliEnbl" size="1" OnChange="swtich_ethConv_apcli()">
+    <select id="apcliEnbl" name="apcliEnbl" size="1">
       <option value="0" id="apcliD">Disable</option>
       <option value="1" id="apcliE">Enable</option>
     </select>
@@ -412,7 +331,7 @@ function opmode_submit()
 </table>
 <p />
 <center>
-<input type="button" style="{width:120px;}" value="Apply" id="oApply" onClick="opmode_submit();">&nbsp;&nbsp;
+<input type="button" style="{width:120px;}" value="Apply" id="oApply" onClick="msg(); document.opmode.submit(); parent.menu.location.reload();">&nbsp;&nbsp;
 <input type="reset" style="{width:120px;}" value="Reset" id="oCancel" onClick="window.location.reload()">
 </center>
 </form>
